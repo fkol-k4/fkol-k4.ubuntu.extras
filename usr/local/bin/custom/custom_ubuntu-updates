@@ -1,0 +1,90 @@
+#!/bin/bash
+
+#   Filename    :   custom_ubuntu-updates
+#   Type        :   Bash shell script
+#   Comment     :   Automatic Ubuntu updates
+#   Description :   Automated Ubuntu on BTRFS system installation maintenance.
+#                   Requires main BTRFS partition to be auto-mounted in 
+#                   /etc/fstab to /mnt/HDD/ or /mnt/HDD/ mount point.
+#                   In any other case, adjust script's variables accordingly.
+
+#   CLEAR CONSOLE OR TERMINAL SCREEN
+clear
+
+#   INSTALLATION SUBVOLUME DEFINITION
+MySubvolume="subvolume-name"
+
+#   SNAPSHOT HANDLING  ** comment unused snapshot part **
+#   1. Delete old snapshots of HDD's installation
+for i in $(ls /mnt/HDD/ | sort | grep $MySubvolume-snapshot-on- | head -n -1); do
+    sudo btrfs subvolume delete /mnt/HDD/"$i"
+done
+#   2. take a new snapshot of HDD's installation
+sudo btrfs subvolume snapshot /mnt/HDD/$MySubvolume /mnt/HDD/$MySubvolume-snapshot-on-$(date +%Y-%m-%d-%T)
+#   3. Delete old snapshots of SSD's installation
+for i in $(ls /mnt/SSD/ | sort | grep $MySubvolume-snapshot-on- | head -n -1); do
+    sudo btrfs subvolume delete /mnt/SSD/"$i"
+done
+#   4. take a new snapshot of SSD's installation
+sudo btrfs subvolume snapshot /mnt/SSD/$MySubvolume /mnt/SSD/$MySubvolume-snapshot-on-$(date +%Y-%m-%d-%T)
+
+#   SYSTEM UPDATES
+#   1. package updates
+sudo apt-get -q update
+sudo apt-get --yes --force-yes dist-upgrade
+sudo sync
+#   2. apt cleaning
+sudo apt-get --yes clean
+sudo apt-get --yes autoclean
+sudo apt-get --yes autoremove
+#   3. fix possible dependency or breakage problems
+sudo apt-get --yes --force-yes --fix-missing install
+sudo apt-get --yes --force-yes --fix-broken install
+sudo dpkg --configure -a
+sudo sync
+
+#   GRUB2 HANDLING
+#   1. Update GRUB2 configuration for BIOS && UEFI installations
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+#   2. Update GRUB2 configuration for UEFI installations
+[[ -f  /boot/efi/EFI/ubuntu/grub.cfg ]] && sudo grub-mkconfig -o /boot/efi/EFI/ubuntu/grub.cfg
+#   3. GRUB2 installation on selected disks
+for disk in /dev/sd?; do
+    echo -e "
+GRUB2 configuration is updated. Do you want to install GRUB2 to \033[1m
+$disk\033[0m ?
+Type \033[1my\033[0m to install, or any other key to skip.
+Press \033[1mCtrl + C\033[0m to exit this program."
+    read -p "Type here: " grub_install_answer
+    if [[ $grub_install_answer == y ]]; then
+        sudo grub-install --recheck "$disk"
+    else
+        echo -e "Ok $USER, skipping this disk..."
+    fi
+done
+#   4. Sync disk I/O
+sudo sync
+
+#   SCRIPT END MESSAGES AND EXIT
+#   1. Inform user on terminal/console screen
+echo -e "
+    Updates script is completed.
+    ────────────────────────────
+
+    The terminal window will remain open for updates inspection.
+    Press any key to close it."
+#   2. Inform user by notification ** if possible **
+if [[ `which notify-send` ]]; then
+    notify-send -t 3000  "$MySubvolume Updated. Check your terminal."
+fi
+#   3. Wait for user's updates log inspection
+read -s -n 1 key
+#   4. Exit the script
+clear
+echo "
+Key pressed!
+
+The terminal window will close in four (4) seconds.
+See you next time $USER"
+sleep 4
+exit 0
