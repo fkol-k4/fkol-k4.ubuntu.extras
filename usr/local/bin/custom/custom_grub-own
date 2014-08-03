@@ -10,10 +10,11 @@
 # Clear terminal screen
 clear
 
-# Update GRUB2 configuration
-sudo grub-mkconfig -o /boot/grub/grub.cfg
-# Update GRUB2 configuration for EFI installations
-[[ -f  /boot/efi/EFI/ubuntu/grub.cfg ]] && sudo grub-mkconfig -o /boot/efi/EFI/ubuntu/grub.cfg
+# Update GRUB2 configuration (bios && EFI installations)
+[[ -f  /boot/grub/grub.cfg ]] && sudo grub-mkconfig -o /boot/grub/grub.cfg
+##  Update GRUB2 configuration for EFI installations
+##  Activate **** only if explicitely needed ****
+#[[ -f  /boot/efi/EFI/ubuntu/grub.cfg ]] && sudo grub-mkconfig -o /boot/efi/EFI/ubuntu/grub.cfg
 
 # GRUB2 installation procedure
 for disk in /dev/sd?; do

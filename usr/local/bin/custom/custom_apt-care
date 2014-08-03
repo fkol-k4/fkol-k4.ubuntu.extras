@@ -1,0 +1,12 @@
+#!/bin/sh
+
+#   Filename    :   custom_apt-care
+#   Type        :   bash shell script
+#   Comment     :   cleanup apt cache
+
+sudo apt-get -y clean
+sudo apt-get -y autoclean
+sudo apt-get -y autoremove
+sudo apt-get -y --force-yes --fix-missing install
+sudo apt-get -y --force-yes --fix-broken install
+sudo dpkg --configure -a

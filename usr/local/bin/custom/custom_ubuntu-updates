@@ -16,17 +16,17 @@ MySubvolume="subvolume-name"
 
 #   SNAPSHOT HANDLING  ** comment unused snapshot part **
 #   1. Delete old snapshots of HDD's installation
-for i in $(ls /mnt/HDD/ | sort | grep $MySubvolume-snapshot-on- | head -n -1); do
+for i in $(ls /mnt/HDD/ | sort | grep "$MySubvolume"-snapshot-on- | head -n -1); do
     sudo btrfs subvolume delete /mnt/HDD/"$i"
 done
 #   2. take a new snapshot of HDD's installation
-sudo btrfs subvolume snapshot /mnt/HDD/$MySubvolume /mnt/HDD/$MySubvolume-snapshot-on-$(date +%Y-%m-%d-%T)
+sudo btrfs subvolume snapshot /mnt/HDD/"$MySubvolume" /mnt/HDD/"$MySubvolume"-snapshot-on-$(date +%Y-%m-%d-%T)
 #   3. Delete old snapshots of SSD's installation
-for i in $(ls /mnt/SSD/ | sort | grep $MySubvolume-snapshot-on- | head -n -1); do
+for i in $(ls /mnt/SSD/ | sort | grep "$MySubvolume"-snapshot-on- | head -n -1); do
     sudo btrfs subvolume delete /mnt/SSD/"$i"
 done
 #   4. take a new snapshot of SSD's installation
-sudo btrfs subvolume snapshot /mnt/SSD/$MySubvolume /mnt/SSD/$MySubvolume-snapshot-on-$(date +%Y-%m-%d-%T)
+sudo btrfs subvolume snapshot /mnt/SSD/"$MySubvolume" /mnt/SSD/"$MySubvolume"-snapshot-on-$(date +%Y-%m-%d-%T)
 
 #   SYSTEM UPDATES
 #   1. package updates
