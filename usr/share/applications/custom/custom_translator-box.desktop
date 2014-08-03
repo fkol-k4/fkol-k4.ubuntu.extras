@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=Translator Box
+Name[el]=Μεταφραστικό πεδίο
+GenericName=Online translator
+GenericName[el]=Διαδικτυακός μεταφραστής
+Comment=Uses Google translate to translate user input string
+Comment[el]=Χρησιμοποιεί το Google translate για τη μετάφραση κειμένων
+Categories=Network;Office;
+Keywords=Google;translation;translate;online;web;zenity
+Keywords[el]=Μετάφραση;Πεδίο;Διαδίκτυο;Κείμενο;Αγγλικά;Ελληνικά;
+Icon=/usr/share/icons/custom/translator-box.svg
+Exec=/usr/local/bin/custom/custom_translator-box

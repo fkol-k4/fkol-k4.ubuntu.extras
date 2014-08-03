@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=Ubuntu Iso sync
+Name[el]=Συγχρονισμός Ubuntu Iso
+GenericName=Iso sync
+GenericName[el]=Συγχρονισμός Iso
+Comment=Synchronises daily-live Ubuntu-dev iso images locally.
+Comment[el]=Συγχρονίζει τοπικά ημερήσιες εικόνες iso του Ubuntu.
+Categories=Utility;Network;ConsoleOnly;
+Keywords=ubuntu;iso;image;daily;live;sync;zsync;local;CD;
+Keywords[el]=Συγχρονισμός;Εικόνα;τοπικά;Ημερήσια;
+Icon=/usr/share/icons/custom/ubuntu-square.svg
+Exec=/usr/local/bin/custom/custom_daily-iso-sync
+Terminal=true

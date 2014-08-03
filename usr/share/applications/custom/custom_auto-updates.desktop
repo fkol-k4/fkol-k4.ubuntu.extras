@@ -1,0 +1,25 @@
+[Desktop Entry]
+Type=Application
+Name=Auto Updates
+Name[el]=Αυτόματες ενημερώσεις
+GenericName=Updater
+GenericName[el]=Ενημερώσεις
+Comment=Automated updates script for Ubuntu-based systems
+Comment[el]=Σενάριο ενεργειών αυτομάτων ενημερώσεων για Ubuntu-based συστήματα
+Categories=Utility;System;ConsoleOnly;
+Keywords=Auto;Updates;Ubuntu;Based;Script;Bash;Donkey;
+Keywords[el]=Αυτόματες;Ενημερώσεις;Σενάριο;Γαϊδούρι;
+Icon=/usr/share/icons/custom/donkey-grey-square.svg
+Exec=/usr/local/bin/custom/custom_ubuntu_updates
+Terminal=true
+Actions=Reboot;ShutDown;
+
+[Desktop Action Reboot]
+Name=Reboot
+Name[el]=Επανεκκίνηση
+Exec=gksudo "shutdown -r now"
+
+[Desktop Action ShutDown]
+Name=Shut Down
+Name[el]=Τερματισμός
+Exec=gksudo "shutdown -h now"

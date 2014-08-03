@@ -5,10 +5,20 @@
 #   Description :   Syncs daily Iso images for Ubuntu && flavours.
 #   Comment     :   iso sync script
 
-#   Define ISO directory path 
+#   CHECK IF ZSYNC IS INSTALLED, NOTIFY AND EXIT IF NOT.
+if ! [[ `which zsync` ]]; then
+    [[ `which notify-send` ]] && notify-send -t 4000 "This script requires zsync. Install it and try again."
+    echo -e "This script requires zsync to run, but it is not installed.
+You can install zsync with the command \e[1m
+sudo apt-get install zsync \e[0m"
+    sleep 8
+    exit
+fi
+
+#   DEFINE ISO DIRECTORY PATH 
 ISO_PATH="/Files/Downloads_Subvolume/Linux/Distro-isos/Ubuntu"
 
-## Change to work directory - Precise Pangolin
+##  CHANGE TO WORK DIRECTORY - PRECISE PANGOLIN
 #   Precise daily DVDs
 if [ -d "$ISO_PATH"/Precise_Pangolin ]; then
     cd /"$ISO_PATH"/Precise_Pangolin/
@@ -21,7 +31,7 @@ zsync -i Ubuntu-desktop_Precise_DVD-i386.iso -o Ubuntu-desktop_Precise_DVD-i386.
 sync
 rm -rf *.zs-old
 
-##  Change to work directory - Trusty Tahr
+##  CHANGE TO WORK DIRECTORY - TRUSTY TAHR
 #   Utopic daily ISOs
 if [ -d /"$ISO_PATH"/Trusty_Tahr ]; then
     cd /"$ISO_PATH"/Trusty_Tahr/
@@ -40,7 +50,7 @@ zsync -i Kubuntu-14.04-desktop-i386.iso -o Kubuntu-14.04-desktop-i386.iso http:/
 sync
 rm -rf *.zs-old
 
-##  Change to work directory - Utopic Unicorn
+##  CHANGE TO WORK DIRECTORY - UTOPIC UNICORN
 #   Utopic daily ISOs
 if [ -d /"$ISO_PATH"/Utopic_Unicorn ]; then
     cd /"$ISO_PATH"/Utopic_Unicorn/
@@ -74,7 +84,7 @@ zsync -i Ubuntu-Next-Utopic-i386.iso -o Ubuntu-Next-Utopic-i386.iso http://cdima
 sync
 rm -rf *.zs-old
 
-##  User input to exit script
+##  USER INPUT TO EXIT SCRIPT
 echo '
 
     Iso images synchronization is finished.
