@@ -11,10 +11,10 @@ ISO_PATH="/Files/Downloads_Subvolume/Linux/Distro-isos/Ubuntu"
 ## Change to work directory - Precise Pangolin
 #   Precise daily DVDs
 if [ -d "$ISO_PATH"/Precise_Pangolin ]; then
-    cd /"$ISO_PATH"/Precise_Pangolin/
+    cd "$ISO_PATH"/Precise_Pangolin/
 else
-    mkdir -p /"$ISO_PATH"/Precise_Pangolin
-    cd /"$ISO_PATH"/Precise_Pangolin/
+    mkdir -p "$ISO_PATH"/Precise_Pangolin
+    cd "$ISO_PATH"/Precise_Pangolin/
 fi
 zsync -i Ubuntu-desktop_Precise_DVD-amd64.iso -o Ubuntu-desktop_Precise_DVD-amd64.iso http://cdimage.ubuntu.com/precise/dvd/current/precise-dvd-amd64.iso.zsync
 zsync -i Ubuntu-desktop_Precise_DVD-i386.iso -o Ubuntu-desktop_Precise_DVD-i386.iso http://cdimage.ubuntu.com/precise/dvd/current/precise-dvd-i386.iso.zsync
@@ -23,11 +23,11 @@ rm -rf *.zs-old
 
 ##  Change to work directory - Trusty Tahr
 #   Utopic daily ISOs
-if [ -d /"$ISO_PATH"/Trusty_Tahr ]; then
-    cd /"$ISO_PATH"/Trusty_Tahr/
+if [ -d "$ISO_PATH"/Trusty_Tahr ]; then
+    cd "$ISO_PATH"/Trusty_Tahr/
 else
     mkdir -p /"$ISO_PATH"/Trusty_Tahr
-    cd /"$ISO_PATH"/Trusty_Tahr/
+    cd "$ISO_PATH"/Trusty_Tahr/
 fi
 #   1. Ubuntu (Unity)
 zsync -i Ubuntu-14.04-desktop-amd64.iso -o Ubuntu-14.04-desktop-amd64.iso http://cdimage.ubuntu.com/trusty/daily-live/current/trusty-desktop-amd64.iso.zsync
@@ -42,11 +42,11 @@ rm -rf *.zs-old
 
 ##  Change to work directory - Utopic Unicorn
 #   Utopic daily ISOs
-if [ -d /"$ISO_PATH"/Utopic_Unicorn ]; then
-    cd /"$ISO_PATH"/Utopic_Unicorn/
+if [ -d "$ISO_PATH"/Utopic_Unicorn ]; then
+    cd "$ISO_PATH"/Utopic_Unicorn/
 else
-    mkdir -p /"$ISO_PATH"/Utopic_Unicorn
-    cd /"$ISO_PATH"/Utopic_Unicorn/
+    mkdir -p "$ISO_PATH"/Utopic_Unicorn
+    cd "$ISO_PATH"/Utopic_Unicorn/
 fi
 #   1. Ubuntu (Unity)
 zsync -i Ubuntu-Desktop_Utopic-amd64.iso -o Ubuntu-Desktop_Utopic-amd64.iso http://cdimage.ubuntu.com/daily-live/current/utopic-desktop-amd64.iso.zsync
@@ -99,4 +99,3 @@ echo "
 sleep 4
 
 exit
-
