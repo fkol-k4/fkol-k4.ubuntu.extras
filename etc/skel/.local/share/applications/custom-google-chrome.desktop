@@ -1,0 +1,51 @@
+[Desktop Entry]
+Version=1.0
+Name=Google Chrome
+GenericName=Web Browser
+GenericName[el]=Περιηγητής ιστού
+Comment=Google's web browser
+Comment[el]=Ο περιηγητής της Google
+Exec=google-chrome %U
+Terminal=false
+Icon=google-chrome
+Type=Application
+Categories=Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml_xml;image/webp;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
+Actions=GMail;Feedly;UbuntuPlanetGR;UbuntuForum;Launchpad;Donkey;Incognito;
+
+[Desktop Action GMail]
+Name=GMail
+Exec=google-chrome https://mail.google.com
+OnlyShowIn=Unity;
+
+[Desktop Action Feedly]
+Name=Feedly News
+Exec=google-chrome http://feedly.com/index.html#index
+OnlyShowIn=Unity;
+
+[Desktop Action UbuntuPlanetGR]
+Name=Planet Ubuntu-gr
+Name[el_GR]=Πλανήτης Ubuntu-gr
+Exec=google-chrome http://planet.ubuntu-gr.org
+OnlyShowIn=Unity;
+
+[Desktop Action UbuntuForum]
+Name=Ubuntu-gr forum
+Exec=google-chrome https://forum.ubuntu-gr.org/search.php?search_id=active_topics
+OnlyShowIn=Unity;
+
+[Desktop Action Launchpad]
+Name=Launchpad home
+Exec=google-chrome https://launchpad.net/
+OnlyShowIn=Unity;
+
+[Desktop Action Donkey]
+Name=Donkey's Corner dashboard
+Exec=google-chrome https://fkolk4.wordpress.com
+OnlyShowIn=Unity;
+
+[Desktop Action Incognito]
+Name=Open incognito window
+Name[el]=Νέο incognito παράθυρο
+Exec=google-chrome --incognito
+OnlyShowIn=Unity;

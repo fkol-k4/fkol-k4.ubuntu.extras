@@ -1,0 +1,50 @@
+[Desktop Entry]
+Name=gedit
+GenericName=Text Editor
+GenericName[el]=Επεξεργαστής κειμένου
+Comment=Edit text files
+Comment[el]=Επεξεργασία αρχείων κειμένου
+Exec=gedit %U
+Terminal=false
+Type=Application
+StartupNotify=true
+MimeType=text/plain;
+#Icon=accessories-text-editor
+Icon=/usr/share/gedit/logo/gedit-logo.png
+Categories=GNOME;GTK;Utility;TextEditor;
+X-GNOME-DocPath=gedit/gedit.xml
+X-GNOME-FullName=gedit Text Editor
+X-GNOME-FullName[el]=Επεξεργαστής κειμένου gedit
+Keywords=Text;Editor;
+Keywords[el]=κείμενο;επεξεργαστής;
+Actions=NewWindow;NewDocument;AsRoot;Fstab;Grub2;GrubCfg;
+
+[Desktop Action NewWindow]
+Name=Open a New Window
+Name[el]=Άνοιγμα νέου παραθύρου
+Exec=gedit --new-window
+
+[Desktop Action NewDocument]
+Name=Open a New Document
+Name[el]=Άνοιγμα νέου εγγράφου
+Exec=gedit --new-document
+
+[Desktop Action AsRoot]
+Name=Open as Root
+Name[el]=Άνοιγμα ως Root
+Exec=gksudo gedit
+
+[Desktop Action Fstab]
+Name=Open /etc/fstab file
+Name[el]=Άνοιγμα αρχείου /etc/fstab
+Exec=gksudo gedit /etc/fstab
+
+[Desktop Action Grub2]
+Name=Open /etc/default/grub file
+Name[el]=Άνοιγμα αρχείου /etc/default/grub
+Exec=gksudo gedit /etc/default/grub
+
+[Desktop Action GrubCfg]
+Name=Open /boot/grub/grub.cfg file
+Name[el]=Άνοιγμα αρχείου /boot/grub/grub.cfg
+Exec=gksudo gedit /boot/grub/grub.cfg

@@ -1,0 +1,68 @@
+[Desktop Entry]
+Version=1.0
+Name=Firefox Web Browser
+Name[el]=Περιηγητής Firefox
+Comment=Browse the World Wide Web
+Comment[el]=Περιηγηθείτε στον παγκόσμιο ιστό
+GenericName=Web Browser
+GenericName[el]=Περιηγητής διαδικτύου
+Keywords=Internet;WWW;Browser;Web;Explorer
+Keywords[el]=Διαδίκτυο;Περιηγητής;Firefox;Φιρεφοχ;Ιντερνετ;Ιστός
+Exec=firefox %u
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+Icon=firefox
+Categories=GNOME;GTK;Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
+StartupNotify=true
+Actions=GMail;Feedly;UbuntuPlanetGR;UbuntuForum;Launchpad;Donkey;NewPrivateWindow;NewWindow;SafeMode;
+
+[Desktop Action GMail]
+Name=GMail
+Exec=firefox https://mail.google.com
+OnlyShowIn=Unity;
+
+[Desktop Action Feedly]
+Name=Feedly News
+Exec=firefox http://feedly.com/index.html#index
+OnlyShowIn=Unity;
+
+[Desktop Action UbuntuPlanetGR]
+Name=Planet Ubuntu-gr
+Name[el_GR]=Πλανήτης Ubuntu-gr
+Exec=firefox http://planet.ubuntu-gr.org
+OnlyShowIn=Unity;
+
+[Desktop Action UbuntuForum]
+Name=Ubuntu-gr forum
+Exec=firefox https://forum.ubuntu-gr.org/search.php?search_id=active_topics
+OnlyShowIn=Unity;
+
+[Desktop Action Launchpad]
+Name=Launchpad home
+Exec=firefox https://launchpad.net
+OnlyShowIn=Unity;
+
+[Desktop Action Donkey]
+Name=Donkey's Corner dashboard
+Exec=firefox https://fkolk4.wordpress.com
+OnlyShowIn=Unity;
+
+[Desktop Action NewPrivateWindow]
+Name=Open a New Private Window
+Name[el]=Νέο παράθυρο σε Private mode
+Exec=firefox -private-window
+OnlyShowIn=Unity;
+
+[Desktop Action NewWindow]
+Name=Open a New Window
+Name[el]=Άνοιγμα νέου παραθύρου
+Exec=firefox -new-window
+OnlyShowIn=Unity;
+
+[Desktop Action SafeMode]
+Name=Open in safe mode
+Name[el_GR]=Άνοιγμα σε safe mode
+Exec=firefox -safe-mode
+OnlyShowIn=Unity;
