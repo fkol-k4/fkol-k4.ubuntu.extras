@@ -3,7 +3,7 @@
 # for examples
 
 # Source global bash.bashrc if it exists
-[[ -f /etc/bash.bashrc ]] && source /etc/bash.bashrc
+[[ -f /etc/profile ]] && source /etc/profile
 
 # If not running interactively, don't do anything
 case $- in
