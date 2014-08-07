@@ -10,7 +10,7 @@ Categories=Utility;System;ConsoleOnly;
 Keywords=Auto;Updates;Ubuntu;Based;Script;Bash;Donkey;
 Keywords[el]=Αυτόματες;Ενημερώσεις;Σενάριο;Γαϊδούρι;
 Icon=/usr/share/icons/custom/donkey-grey-square.svg
-Exec=/usr/local/bin/custom/custom_ubuntu_updates
+Exec=/usr/local/bin/custom/custom_ubuntu-updates
 Terminal=true
 Actions=Reboot;ShutDown;
 
