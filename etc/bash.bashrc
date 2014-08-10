@@ -66,3 +66,6 @@ if [ -x /usr/lib/command-not-found -o -x /usr/share/command-not-found/command-no
 		fi
 	}
 fi
+
+#   Add '/usr/local/bin/custom' directory (if it exists) to PATH.
+[[ -d /usr/local/bin/custom ]] && PATH="$PATH:/usr/local/bin/custom" && export $PATH

@@ -14,7 +14,7 @@ clear
 #   INSTALLATION SUBVOLUME DEFINITION
 MySubvolume="subvolume-name"
 
-#   SNAPSHOT HANDLING  ** comment unused snapshot part **
+#   SNAPSHOT HANDLING  ****  COMMENT UNUSED SNAPSHOT PART  ****
 #   1. Delete old snapshots of HDD's installation
 for i in $(ls /mnt/HDD/ | sort | grep "$MySubvolume"-snapshot-on- | head -n -1); do
     sudo btrfs subvolume delete /mnt/HDD/"$i"
@@ -47,19 +47,20 @@ sudo sync
 #   1. Update GRUB2 configuration for BIOS && UEFI installations
 sudo grub-mkconfig -o /boot/grub/grub.cfg
 #   2. Update GRUB2 configuration for UEFI installations
-[[ -f  /boot/efi/EFI/ubuntu/grub.cfg ]] && sudo grub-mkconfig -o /boot/efi/EFI/ubuntu/grub.cfg
-#   3. GRUB2 installation on selected disks
+#   ** UNCOMMENT ONLY IN SPECIAL OCCASIONS **
+#[[ -f  /boot/efi/EFI/ubuntu/grub.cfg ]] && sudo grub-mkconfig -o /boot/efi/EFI/ubuntu/grub.cfg
+#   3. Offer GRUB2 installation for every disk on the system
 for disk in /dev/sd?; do
     echo -e "
-GRUB2 configuration is updated. Do you want to install GRUB2 to \033[1m
-$disk\033[0m ?
+GRUB2 configuration is updated. Do you want to install GRUB2 to disk
+\033[1m$disk\033[0m?
 Type \033[1my\033[0m to install, or any other key to skip.
 Press \033[1mCtrl + C\033[0m to exit this program."
     read -p "Type here: " grub_install_answer
     if [[ $grub_install_answer == y ]]; then
         sudo grub-install --recheck "$disk"
     else
-        echo -e "Ok $USER, skipping this disk..."
+        echo -e "Ok $USER, not touching this disk..."
     fi
 done
 #   4. Sync disk I/O
@@ -81,10 +82,12 @@ fi
 read -s -n 1 key
 #   4. Exit the script
 clear
-echo "
+echo -e "
 Key pressed!
 
 The terminal window will close in four (4) seconds.
 See you next time $USER"
+# Wait for 4 (four) seconds...
 sleep 4
+# exit
 exit 0
