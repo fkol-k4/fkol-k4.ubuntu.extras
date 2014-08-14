@@ -9,26 +9,31 @@
 #                   In any other case, adjust script's variables accordingly.
 
 #   CLEAR CONSOLE OR TERMINAL SCREEN
+#   ================================
 clear
 
 #   INSTALLATION SUBVOLUME DEFINITION
-MySubvolume="subvolume-name"
+#   =================================
+MY_SUBVOLUME="insert_here_your_subvolume_name"
 
 #   SNAPSHOT HANDLING  ****  COMMENT UNUSED SNAPSHOT PART  ****
+#   ===========================================================
+
 #   1. Delete old snapshots of HDD's installation
-for i in $(ls /mnt/HDD/ | sort | grep "$MySubvolume"-snapshot-on- | head -n -1); do
+for i in $(ls /mnt/HDD/ | sort | grep "$MY_SUBVOLUME"-snapshot-on- | head -n -1); do
     sudo btrfs subvolume delete /mnt/HDD/"$i"
 done
 #   2. take a new snapshot of HDD's installation
-sudo btrfs subvolume snapshot /mnt/HDD/"$MySubvolume" /mnt/HDD/"$MySubvolume"-snapshot-on-$(date +%Y-%m-%d-%T)
+sudo btrfs subvolume snapshot /mnt/HDD/"$MY_SUBVOLUME" /mnt/HDD/"$MY_SUBVOLUME"-snapshot-on-$(date +%Y-%m-%d-%T)
 #   3. Delete old snapshots of SSD's installation
-for i in $(ls /mnt/SSD/ | sort | grep "$MySubvolume"-snapshot-on- | head -n -1); do
+for i in $(ls /mnt/SSD/ | sort | grep "$MY_SUBVOLUME"-snapshot-on- | head -n -1); do
     sudo btrfs subvolume delete /mnt/SSD/"$i"
 done
 #   4. take a new snapshot of SSD's installation
-sudo btrfs subvolume snapshot /mnt/SSD/"$MySubvolume" /mnt/SSD/"$MySubvolume"-snapshot-on-$(date +%Y-%m-%d-%T)
+sudo btrfs subvolume snapshot /mnt/SSD/"$MY_SUBVOLUME" /mnt/SSD/"$MY_SUBVOLUME"-snapshot-on-$(date +%Y-%m-%d-%T)
 
 #   SYSTEM UPDATES
+#   ==============
 #   1. package updates
 sudo apt-get -q update
 sudo apt-get --yes --force-yes dist-upgrade
@@ -44,21 +49,26 @@ sudo dpkg --configure -a
 sudo sync
 
 #   GRUB2 HANDLING
-#   1. Update GRUB2 configuration for BIOS && UEFI installations
-sudo grub-mkconfig -o /boot/grub/grub.cfg
-#   2. Update GRUB2 configuration for UEFI installations
-#   ** UNCOMMENT ONLY IN SPECIAL OCCASIONS **
-#[[ -f  /boot/efi/EFI/ubuntu/grub.cfg ]] && sudo grub-mkconfig -o /boot/efi/EFI/ubuntu/grub.cfg
-#   3. Offer GRUB2 installation for every disk on the system
-for disk in /dev/sd?; do
+#   ==============
+#   1. Define GRUB2 target file && update GRUB2 configuration
+if [ -f /boot/grub/grub.cfg ]; then
+    TARGET_FILE="/boot/grub/grub.cfg"
+    sudo grub-mkconfig -o "$TARGET_FILE"
+elif [ -f /boot/efi/EFI/ubuntu/grub.cfg ]; then
+    TARGET_FILE="/boot/efi/EFI/ubuntu/grub.cfg"
+    sudo grub-mkconfig -o "$TARGET_FILE"
+fi
+
+#   2. Offer GRUB2 installation for every disk on the system
+for Disk in /dev/sd?; do
     echo -e "
 GRUB2 configuration is updated. Do you want to install GRUB2 to disk
-\033[1m$disk\033[0m?
+\033[1m$Disk\033[0m?
 Type \033[1my\033[0m to install, or any other key to skip.
 Press \033[1mCtrl + C\033[0m to exit this program."
-    read -p "Type here: " grub_install_answer
-    if [[ $grub_install_answer == y ]]; then
-        sudo grub-install --recheck "$disk"
+    read -p "Type here: " Grub_Install_Answer
+    if [[ $Grub_Install_Answer == y ]]; then
+        sudo grub-install --recheck "$Disk"
     else
         echo -e "Ok $USER, not touching this disk..."
     fi
@@ -76,7 +86,7 @@ echo -e "
     Press any key to close it."
 #   2. Inform user by notification ** if possible **
 if [[ `which notify-send` ]]; then
-    notify-send -t 3000  "$MySubvolume Updated. Check your terminal."
+    notify-send -t 3000  "$MY_SUBVOLUME Updated. Check your terminal."
 fi
 #   3. Wait for user's updates log inspection
 read -s -n 1 key
