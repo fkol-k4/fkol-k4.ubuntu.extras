@@ -104,8 +104,16 @@ alias l='ls -CF'
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
+# enable bash completion in interactive shells
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
 # Aliases:
 alias unhide-all-applications="sed -i 's/NoDisplay=true/NoDisplay=false/g' /usr/share/applications/*.desktop "
 alias unhide-startup-applications="sed -i 's/NoDisplay=true/NoDisplay=false/g' /etc/xdg/autostart/*.desktop "
 alias unhide-gnome-applications="sed -i 's/NoDisplay=true/NoDisplay=false/g' /usr/share/gnome/*.desktop "
-
