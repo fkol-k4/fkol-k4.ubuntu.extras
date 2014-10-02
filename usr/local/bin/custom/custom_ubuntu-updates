@@ -14,7 +14,9 @@ clear
 
 #   INSTALLATION SUBVOLUME DEFINITION
 #   =================================
-MY_SUBVOLUME="insert_here_your_subvolume_name"
+#   The name of the subvolume that our system uses for " / " mountpoint
+#   The example below is default for Ubuntu.
+MY_SUBVOLUME="@"
 
 #   SNAPSHOT HANDLING  ****  COMMENT UNUSED SNAPSHOT PART  ****
 #   ===========================================================
