@@ -14,25 +14,25 @@ clear
 
 #   INSTALLATION SUBVOLUME DEFINITION
 #   =================================
-#   The name of the subvolume that our system uses for " / " mountpoint
-#   The example below is default for Ubuntu.
+# 1. Our installation is inside a BTRFS subvolume. We need an extra mountpoint
+#    for the system's partition so that we have the ability to manage our 
+#    installation's subvolume (snapshot creation and deletion).
+#    This mountpoint must have its own /etc/fstab entry.
+#    The value below is an example.
+ROOT_PARTITION_MOUNTPOINT="/mnt/my-parent-partition"
+# 2. The name of the subvolume that our system uses for " / " mountpoint
+#    The example below is default for Ubuntu.
 MY_SUBVOLUME="@"
 
 #   SNAPSHOT HANDLING  ****  COMMENT UNUSED SNAPSHOT PART  ****
 #   ===========================================================
 
-#   1. Delete old snapshots of HDD's installation
-for i in $(ls /mnt/HDD/ | sort | grep "$MY_SUBVOLUME"-snapshot-on- | head -n -1); do
-    sudo btrfs subvolume delete /mnt/HDD/"$i"
+#   1. Delete old installation snapshots
+for i in $(ls "$ROOT_PARTITION_MOUNTPOINT"/ | sort | grep "$MY_SUBVOLUME"-snapshot-on- | head -n -1); do
+    sudo btrfs subvolume delete "$ROOT_PARTITION_MOUNTPOINT"/"$i"
 done
-#   2. take a new snapshot of HDD's installation
-sudo btrfs subvolume snapshot /mnt/HDD/"$MY_SUBVOLUME" /mnt/HDD/"$MY_SUBVOLUME"-snapshot-on-$(date +%Y-%m-%d-%T)
-#   3. Delete old snapshots of SSD's installation
-for i in $(ls /mnt/SSD/ | sort | grep "$MY_SUBVOLUME"-snapshot-on- | head -n -1); do
-    sudo btrfs subvolume delete /mnt/SSD/"$i"
-done
-#   4. take a new snapshot of SSD's installation
-sudo btrfs subvolume snapshot /mnt/SSD/"$MY_SUBVOLUME" /mnt/SSD/"$MY_SUBVOLUME"-snapshot-on-$(date +%Y-%m-%d-%T)
+#   2. Take a new snapshot of the installation
+sudo btrfs subvolume snapshot "$ROOT_PARTITION_MOUNTPOINT/$MY_SUBVOLUME" "$ROOT_PARTITION_MOUNTPOINT/$MY_SUBVOLUME-snapshot-on-$(date +%Y-%m-%d-%T)"
 
 #   SYSTEM UPDATES
 #   ==============
