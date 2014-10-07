@@ -29,7 +29,7 @@ MY_SUBVOLUME="@"
 
 #   1. Delete old installation snapshots
 for i in $(ls "$ROOT_PARTITION_MOUNTPOINT"/ | sort | grep "$MY_SUBVOLUME"-snapshot-on- | head -n -1); do
-    sudo btrfs subvolume delete "$ROOT_PARTITION_MOUNTPOINT"/"$i"
+    sudo btrfs subvolume delete "$ROOT_PARTITION_MOUNTPOINT/$i"
 done
 #   2. Take a new snapshot of the installation
 sudo btrfs subvolume snapshot "$ROOT_PARTITION_MOUNTPOINT/$MY_SUBVOLUME" "$ROOT_PARTITION_MOUNTPOINT/$MY_SUBVOLUME-snapshot-on-$(date +%Y-%m-%d-%T)"
@@ -37,7 +37,7 @@ sudo btrfs subvolume snapshot "$ROOT_PARTITION_MOUNTPOINT/$MY_SUBVOLUME" "$ROOT_
 #   SYSTEM UPDATES
 #   ==============
 #   1. package updates
-sudo apt-get -q update
+sudo apt-get update
 sudo apt-get --yes --force-yes dist-upgrade
 sudo sync
 #   2. apt cleaning
@@ -68,8 +68,8 @@ GRUB2 configuration is updated. Do you want to install GRUB2 to disk
 \033[1m$Disk\033[0m?
 Type \033[1my\033[0m to install, or any other key to skip.
 Press \033[1mCtrl + C\033[0m to exit this program."
-    read -p "Type here: " Grub_Install_Answer
-    if [[ $Grub_Install_Answer == y ]]; then
+    read -p "Type here: " GRUB_INSTALL_ANSWER
+    if [[ $GRUB_INSTALL_ANSWER == y ]]; then
         sudo grub-install --recheck "$Disk"
     else
         echo -e "Ok $USER, not touching this disk..."
@@ -88,7 +88,11 @@ echo -e "
     Press any key to close it."
 #   2. Inform user by notification ** if possible **
 if [[ `which notify-send` ]]; then
-    notify-send -t 3000  "$MY_SUBVOLUME Updated. Check your terminal."
+    if [ -f /usr/share/icons/custom/donkey.svg ]; then
+        notify-send -i /usr/share/icons/custom/donkey.svg -t 3000 "$MY_SUBVOLUME Updated. Check your terminal."
+    else
+        notify-send -t 3000  "$MY_SUBVOLUME Updated. Check your terminal."
+    fi
 fi
 #   3. Wait for user's updates log inspection
 read -s -n 1 key
