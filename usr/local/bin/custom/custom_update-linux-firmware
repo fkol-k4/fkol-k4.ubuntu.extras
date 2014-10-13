@@ -9,6 +9,7 @@
 cd /tmp/
     git clone git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
     sudo cp -r linux-firmware/* /lib/firmware/
+    sync
     rm -rf linux-firmware
     sudo update-initramfs -u
 cd ~

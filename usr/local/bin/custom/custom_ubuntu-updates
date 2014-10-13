@@ -39,7 +39,7 @@ sudo btrfs subvolume snapshot "$ROOT_PARTITION_MOUNTPOINT/$MY_SUBVOLUME" "$ROOT_
 #   1. package updates
 sudo apt-get update
 sudo apt-get --yes --force-yes dist-upgrade
-sudo sync
+sync
 #   2. apt cleaning
 sudo apt-get --yes clean
 sudo apt-get --yes autoclean
@@ -48,7 +48,7 @@ sudo apt-get --yes autoremove
 sudo apt-get --yes --force-yes --fix-missing install
 sudo apt-get --yes --force-yes --fix-broken install
 sudo dpkg --configure -a
-sudo sync
+sync
 
 #   GRUB2 HANDLING
 #   ==============
@@ -76,7 +76,7 @@ Press \033[1mCtrl + C\033[0m to exit this program."
     fi
 done
 #   4. Sync disk I/O
-sudo sync
+sync
 
 #   SCRIPT END MESSAGES AND EXIT
 #   1. Inform user on terminal/console screen
