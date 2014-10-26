@@ -1,0 +1,241 @@
+#!/bin/bash
+
+#   Filename  : custom_build_bfq_kernel
+#   Filetype  : Bash shell script
+#   Comment   : Compile an Ubuntu kernel with support for the BFQ IO scheduler
+
+# Copyright (C) : 2014  fkol-k4
+
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 2 of the License, or (at your option)
+# any later version.
+
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+# details.
+
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+# sources repositories warning
+clear
+echo -e "
+    Hello $USER.
+This script requires that sources repositories in your system are enabled,
+otherwise it will fail to build the kernel.
+If they are not, cancel this program (hit \033[1mctrl + c\033[0m) and enable them.
+
+If they already are enabled, press any key to continue and the script will
+install all necessary build dependency packages.
+"
+read -s -n 1 key
+
+# git && kernel build dependencies installation
+DEPENDENCIES_LIST=(
+    build-essential dkms fakeroot git kernel-package kernel-wedge libncurses5
+    libncurses5-dev linux-headers-$(uname -r) makedumpfile xterm
+    )
+
+sudo apt-get --yes install ${DEPENDENCIES_LIST[*]}
+sudo apt-get --yes build-dep linux-image-$(uname -r)
+for dependency in ${DEPENDENCIES_LIST[*]}; do
+    sudo apt-get --yes install $dependency
+done
+sync
+
+# create working directory
+working_dir=`zenity                                 \
+            --file-selection                        \
+            --directory                             \
+            --title="Choose a working directory..."`
+cd "$working_dir/"
+
+# select a kernel version, define build parameters
+# Ubuntu kernel git repo pattern: git://kernel.ubuntu.com/ubuntu/ubuntu-<release>.git
+clear
+echo -e "
+     Ok, everything is ready to begin.
+Now, you have to choose the kernel version you want to build. The options are:
+
+1. Ubuntu 12.04 Precice Pangolin LTS kernel version     (linux-3.2)
+2. Ubuntu 14.04 Trusty Tahr LTS kernel version          (linux-3.13)
+3. Ubuntu 14.10 Utopic Unicorn kernel version           (linux 3.16)
+4. Ubuntu 15.04 Vivid Verne kernel version              (under development)
+5. Latest Mainline kernel version       --DEFAULT--     (Linus Torvalds tree)
+
+    Type the number written next to the kernel version that you want to compile
+and press \033[1mENTER\033[0m key.
+
+If you enter something different or just press ENTER, the program will default
+to fallback choise of the Mainline Linux Kernel.
+"
+read -p "Enter your selection: " KERNEL_SELECTION
+
+if [[ $KERNEL_SELECTION == 1 ]]; then
+    kernel_tree="git://kernel.ubuntu.com/ubuntu/ubuntu-precise.git"
+    folder="ubuntu-precise"
+elif [[ $KERNEL_SELECTION == 2 ]]; then
+    kernel_tree="git://kernel.ubuntu.com/ubuntu/ubuntu-trusty.git"
+    folder="ubuntu-trusty"
+elif [[ $KERNEL_SELECTION == 3 ]]; then
+    kernel_tree="git://kernel.ubuntu.com/ubuntu/ubuntu-utopic.git"
+    folder="ubuntu-utopic"
+elif [[ $KERNEL_SELECTION == 4 ]]; then
+    kernel_tree="git://kernel.ubuntu.com/ubuntu/ubuntu-vivid.git"
+    folder="ubuntu-vivid"
+else
+    kernel_tree="git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git"
+    folder="linux-stable"
+fi
+
+# search for tree directory, cd into it && update it
+if [ -d "$working_dir/$folder" ]; 
+    cd $folder
+    git checkout master
+    git pull
+else
+    git clone $kernel_tree
+    cd $folder
+fi
+
+# select kernel branch to build
+git tag -l > /tmp/kernel_tree_info.txt
+zenity --text-info --title="Copy branch name" --filename="/tmp/kernel_tree_info.txt"
+kernel_branch=`zenity --entry --title='Select branch' --text='Type branch'`
+if [[ `git tag -l | grep "$kernel_branch"` != "" ]]; then
+    git checkout -b $kernel_branch
+fi
+
+# pause for optional patch download
+clear
+
+echo -e "
+    Do you want to apply any patches to your kernel?
+If yes, open a browser, go to the appropriate URL and download your patch.
+
+Example URL are following.
+-   BFQ I/O schedule:
+\033[1mhttp://algo.ing.unimo.it/people/paolo/disk_sched/sources.php\033[0m
+
+
+You have to download the appropriate version of the patch you want into the
+\033[1m$(pwd)/\033[0m directory.
+
+This script will pause until you press any key, so that it will give you the
+time to download any patches.
+
+\033[1mWhen you are finished, press any key to continue...\033[0m
+"
+
+# wait for user input
+read -s -n 1 key
+
+# apply in-directory patches
+for patch in `ls *.patch`; do
+    git am $patch
+done
+
+
+### compile Ubuntu kernel
+### (instructions: https://wiki.ubuntu.com/Kernel/BuildYourOwnKernel )
+#if [ $method == Ubuntu ]; then
+#    # 1. modifying the configuration
+#    chmod a+x debian/scripts/*
+#    chmod a+x debian/scripts/misc/*
+#    fakeroot debian/rules editconfigs
+#    # 2. Building the kernel
+#    fakeroot debian/rules binary-image binary-headers binary-generic
+#    fakeroot debian/rules clean
+## compile mainline kernel
+## (instructions: https://help.ubuntu.com/community/Kernel/Compile#Alternate_Build_Method_.28B.29:_The_Old-Fashioned_Debian_Way )
+#elif [ $method == Mainline ]; then
+#    # 1. copy old configuration and config new kernel
+#    cp -vi /boot/config-`uname -r` .config
+#    make menuconfig
+#    # 2. make the kernel
+#    make -jdate +%Y-%m-%d deb-pkg LOCALVERSION=-`date +%Y-%m-%d`-fkol-k4
+#    # 3. add Ubuntu splash screen initramfs modules
+#    if [ `cat /etc/initramfs-tools/modules | grep vesafb` != vesafb ]; then
+#        echo vesafb | sudo tee -a /etc/initramfs-tools/modules
+#    fi
+#    if [ `cat /etc/initramfs-tools/modules | grep fbcon` != fbcon ]; then
+#        echo fbcon | sudo tee -a /etc/initramfs-tools/modules
+#    fi
+#fi
+
+# prompt for local version name and compile kernel
+cp -vi /boot/config-`uname -r` .config
+make menuconfig
+local_version=`zenity --entry                           \
+    --title='Kernel local version'                      \
+    --text='Enter your Kernel local version name...'`
+make -j`nproc` deb-pkg LOCALVERSION=-"$local_version"
+
+# install compiled kernel (optional, ask before)
+clear
+
+echo -e "
+    Ok $USER, Linux kernel compilation is finished. Do you want to install the
+new kernel?
+
+(Y/y): Yes, install new kernel
+(N/n): No, do not install...        (\033[1mDEFAULT\033[om)"
+
+read -p "Install new Linux Kernel? " installation_choise
+
+if [ $installation_choise == Y ] || [ $installation_choise == y ]; then
+    cd ../
+    sudo dpkg -i linux-*.deb
+    cd $HOME
+    # Update and install GRUB to the disk
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+    for disk in /dev/sd?; do
+        echo -e "
+GRUB2 configuration is updated. Do you want to install GRUB2 to \033[1m
+$disk\033[0m ?
+Type \033[1my\033[0m to install, or any other key to skip.
+Press Ctrl + C to exit this program."
+        read -p "Type here: " grub_install_answer
+        if [[ $grub_install_answer == y ]]; then
+            sudo grub-install --recheck "$disk"
+        else
+            echo -e "Ok $USER, skipping $disk ..."
+        fi
+    done
+fi
+
+# end script message
+clear
+
+NOTIFY_ICON="/usr/share/icons/custom/Tux.svg"
+
+if [[ `which notify-send` ]]; then
+    if [ -f "$NOTIFY_ICON" ]; then
+        notify-send -i "$NOTIFY_ICON" -t 3000 "All jobs finished. Check your terminal."
+    else
+        notify-send -t 3000  "All jobs finished. Check your terminal."
+    fi
+fi
+
+echo -e "
+    Ok $USER. all jobs are finished.
+
+    Press any key to exit."
+
+read -s -n 1 key
+
+echo -e "
+    Ok, key pressed!
+
+The terminal window will close in four (4) seconds.
+
+See you next time $USER
+"
+
+sleep 4
+
+exit 0
+
