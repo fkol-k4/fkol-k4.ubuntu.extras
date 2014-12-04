@@ -1,8 +1,0 @@
-#!/bin/sh
-# Filename__: custom_repo-list
-# Filetype__: Shell script
-# Purpose___: Lists all repository sources
-# Author____: fkol k4
-# Boxes_____: ┌ ─ ┐││└ ─ ┘
-
-find /etc/apt -name '*.list' -exec bash -c 'echo -e "\n$1\n"; cat -n "$1"' _ '{}' \; 
