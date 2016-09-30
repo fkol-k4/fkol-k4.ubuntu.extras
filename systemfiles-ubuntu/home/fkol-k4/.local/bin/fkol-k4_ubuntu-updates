@@ -1,0 +1,111 @@
+#!/bin/bash
+
+#   File: $HOME/.local/bin/fkol-k4_ubuntu-updates
+#   Type: bash script
+
+#   Update packages in a .deb-based Linux system.
+#   Copyright (C) 2015 fkol-k4 fkolyvas@gmail.com
+
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation version 2 of the License.
+
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+
+#   You should have received a copy of the GNU General Public License along
+#   with this program; if not, write to the Free Software Foundation, Inc.,
+#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+#   CLEAR CONSOLE
+#   =============
+clear
+
+#   SCRIPT VARIABLES DEFINITION
+#   ===========================
+#   Our installation is inside a BTRFS subvolume. We need an extra mountpoint
+#   for the system's partition so that we have the ability to manage our 
+#   installation's subvolume (snapshot creation and deletion).
+#   This mountpoint must have its own /etc/fstab entry.
+#   The value below is an example.
+ROOT_PARTITION_MOUNTPOINT="/mnt/my-parent-partition"
+
+#   The name of the subvolume that our system uses for " / " mountpoint
+#   The value below is an example.
+SUBVOLUME_NAME="my-subvolume-name"
+
+#   The GRUB installation target.
+#   The value below is an example.
+#   GRUB_TARGET="/dev/sda"
+
+#   SNAPSHOTS
+#   =========
+#   1. Delete every snapshot except the last three taken.
+for i in $(ls $ROOT_PARTITION_MOUNTPOINT/ | sort | grep $SUBVOLUME_NAME-snapshot-on- | head -n -3); do
+    sudo btrfs subvolume delete "$ROOT_PARTITION_MOUNTPOINT/$i"
+done
+#   2. Create a new snapshot
+sudo btrfs subvolume snapshot "$ROOT_PARTITION_MOUNTPOINT/$SUBVOLUME_NAME" "$ROOT_PARTITION_MOUNTPOINT/$SUBVOLUME_NAME-snapshot-on-$(date +%Y-%m-%d-%T)"
+#   3. Sync disk I/O
+sync
+
+
+#   PACKAGE UPDATES
+#   ===============
+#   Package updates
+sudo apt-get --quiet update
+sudo apt-get --yes dist-upgrade
+sync
+#   Apt cleaning
+sudo apt-get --yes clean
+sudo apt-get --yes autoclean
+sudo apt-get --yes autoremove
+sync
+#   Fix possible dependency or breakage problems
+sudo apt-get --yes --fix-missing install
+sudo apt-get --yes --fix-broken install
+sudo dpkg --configure -a
+sync
+
+
+#   GRUB2 HANDLING
+#   ==============
+#   Update GRUB2 configuration
+#   sudo grub-mkconfig -o /boot/grub/grub.cfg
+# 	Install GRUB to $GRUB_TARGET
+#   sudo grub-install $GRUB_TARGET
+# 	Sync disk I/O
+sync
+
+
+#   USER NOTIFICATION && UPDATES SCRIPT EXIT
+#   ========================================
+#   Notify $USER on terminal
+echo "    Updates script completed."
+echo "    ─────────────────────────"
+echo
+echo "    The terminal window will remain open for updates inspection.
+    Press any key to continue..."
+#   Notify $USER via notification (if possible)
+if [[ `which notify-send` ]]; then
+	# 	set icon for notifications
+	app_icon="/usr/share/icons/custom/donkey-grey-square.svg"
+    if [ -f $app_icon ]; then
+        notify-send -i $app_icon -t 3500  "Updates completed. Check your terminal"
+    else
+        notify-send -t 3500  "Updates completed. Check your terminal"
+    fi
+fi
+# 	Wait for $USER input
+read -s -n 1 key
+# 	Message && exit
+clear
+echo "
+
+The terminal window will close in four (4) seconds."
+echo "
+    See you next time" $USER
+sleep 4
+exit

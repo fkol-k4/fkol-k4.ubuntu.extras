@@ -1,0 +1,35 @@
+#!/bin/bash
+
+#   File: $HOME/.local/bin/fkol-k4_dual-monitor-setup
+#   Type: Bash script
+
+#   My dual monitor settings
+#   Copyright (C) 2014 fkol-k4 (fkolyvas@gmail.com)
+
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation version 2.
+
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+
+#   You should have received a copy of the GNU General Public License along
+#   with this program; if not, write to the Free Software Foundation, Inc.,
+#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+
+##  Detect monitors
+LG_MONITOR=`xrandr | grep HDMI | grep -v disconnected | grep connected | awk '{print $1}'`
+#HP_MONITOR=`xrandr | grep DVI | grep -v disconnected | grep connected | awk '{print $1}'`
+HP_MONITOR=`xrandr | grep VGA | grep -v disconnected | grep connected | awk '{print $1}'`
+
+
+##  Set LG monitor as primary
+xrandr --output $LG_MONITOR --primary
+
+
+##  Set both monitors to 'auto', define exact positions
+xrandr --output $LG_MONITOR  --auto --pos 0x0        \
+       --output $HP_MONITOR --auto --pos 1920x312

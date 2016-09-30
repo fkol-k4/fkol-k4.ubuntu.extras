@@ -1,0 +1,33 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Geany
+GenericName=Integrated Development Environment
+Comment=A fast and lightweight IDE using GTK2
+Exec=geany %F
+Icon=geany
+Terminal=false
+Categories=GTK;Development;IDE;
+MimeType=text/plain;text/x-chdr;text/x-csrc;text/x-c++hdr;text/x-c++src;text/x-java;text/x-dsrc;text/x-pascal;text/x-perl;text/x-python;application/x-php;application/x-httpd-php3;application/x-httpd-php4;application/x-httpd-php5;application/xml;text/html;text/css;text/x-sql;text/x-diff;
+StartupNotify=true
+Actions=AsRoot;SourcesList;Fstab;Grub2;GrubCfg;
+
+[Desktop Action AsRoot]
+Name=Open as Root
+Exec=pkexec geany
+
+[Desktop Action SourcesList]
+Name=Open /etc/apt/sources.list
+Exec=pkexec geany /etc/apt/sources.list
+
+[Desktop Action Fstab]
+Name=Open /etc/fstab file
+Exec=pkexec geany /etc/fstab
+
+[Desktop Action Grub2]
+Name=Open /etc/default/grub file
+Exec=pkexec geany /etc/default/grub
+
+[Desktop Action GrubCfg]
+Name=Open /boot/grub/grub.cfg file
+Exec=pkexec geany /boot/grub/grub.cfg

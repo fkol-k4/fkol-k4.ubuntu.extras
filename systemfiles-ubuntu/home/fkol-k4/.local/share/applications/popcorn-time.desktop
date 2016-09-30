@@ -1,0 +1,23 @@
+[Desktop Entry]
+Type=Application
+Name=Popcorn Time
+GenericName=P2P player
+Comment=Streams movies via p2p protocoll
+Categories=AudioVideo;Network;
+Keywords=Popcorn;Torrent;Movie;Film;Illegal;Stream;P2P;YTS;YiFi;Live
+Icon=/home/fkol-k4/.icons/popcorntime.svg
+Exec=/opt/Popcorn-Time/Popcorn-Time
+Actions=ClearCache;KillPopcorn;ClearTemp;
+
+[Desktop Action ClearCache]
+Name=Clear Popcorn Time cache
+Exec=bash -c "rm -rf $HOME/.config/Popcorn-Time"
+
+
+[Desktop Action KillPopcorn]
+Name=Kill Popcorn Time process
+Exec=killall Popcorn-Time
+
+[Desktop Action ClearTemp]
+Name=Clear Temporary download data
+Exec=bash -c "rm -rf /tmp/Popcorn-Time/* "

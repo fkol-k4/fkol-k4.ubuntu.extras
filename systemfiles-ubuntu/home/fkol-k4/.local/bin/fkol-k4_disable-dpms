@@ -1,0 +1,39 @@
+#!/bin/bash
+
+#   File: $HOME/.local/bin/fkol-k4_disable-dpms
+#   Type: Bash script
+
+#   Disable Display Power Management Signaling and prevent screen blanking.
+#   Copyright (C) 2014 fkol-k4 (fkolyvas@gmail.com)
+
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation version 2.
+
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+
+#   You should have received a copy of the GNU General Public License along
+#   with this program; if not, write to the Free Software Foundation, Inc.,
+#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+##  GENERAL DPMS INFO
+##  =================
+#   The  dpms  option  allows the DPMS (Energy Star) parameters to be set.
+#   The option can take up to three numerical values, or the `force'  flag
+#   followed  by  a  DPMS state.
+#   The  `force'  flags  forces  the server to immediately switch to the DPMS
+#   state specified.  The DPMS state can be one of  `standby',  `suspend',  `off',  or
+#   `on'.   When  numerical values are given, they set the inactivity period (in units
+#   of seconds) before the three modes are activated.  The first value  given  is  for
+#   the `standby' mode, the second is for the `suspend' mode, and the third is for the
+#   `off' mode.  Setting these values implicitly enables the DPMS features.   A  value
+#   of zero disables a particular mode.
+
+
+#   Turn off Display Power Management Signaling
+xset -dpms
+#   Disable screen saver blanking
+xset s off

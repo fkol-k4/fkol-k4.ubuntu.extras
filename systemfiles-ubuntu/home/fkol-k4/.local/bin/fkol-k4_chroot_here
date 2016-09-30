@@ -1,0 +1,35 @@
+#!/bin/bash
+
+#   File: $HOME/.local/bin/fkol-k4_chroot_here
+#   Type: Bash script
+
+#   Chroots in `pwd`
+#   Copyright (C) 2014 fkol-k4 (fkolyvas@gmail.com)
+
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation version 2.
+
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+
+#   You should have received a copy of the GNU General Public License along
+#   with this program; if not, write to the Free Software Foundation, Inc.,
+#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+# mount kernel proc
+sudo mount -t proc /proc proc
+
+# mount binds
+sudo mount --bind /dev dev
+sudo mount --bind /dev/pts dev/pts
+sudo mount --bind /sys sys
+sudo mount --bind /run run
+
+# copy etc/resolv.conf
+sudo cp -L /etc/resolv.conf etc/resolv.conf
+
+# chroot using Bash shell
+sudo chroot . /bin/bash

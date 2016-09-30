@@ -1,0 +1,31 @@
+[Desktop Entry]
+Version=1.0
+Name=Firefox
+GenericName=Web Browser
+GenericName[el]=Περιηγητής διαδικτύου
+Comment=Browse the Web
+Comment[el]=Περιηγηθείτε στο διαδίκτυο
+Exec=firefox %u
+Icon=firefox
+Terminal=false
+Type=Application
+MimeType=text/html;text/xml;application/xhtml+xml;application/vnd.mozilla.xul+xml;text/mml;x-scheme-handler/http;x-scheme-handler/https;
+StartupNotify=true
+Categories=Network;WebBrowser;
+Keywords=web;browser;internet;
+Actions=NewWindow;NewPrivate;PrivateSearch;
+
+[Desktop Action NewWindow]
+Name=New Window
+Name[el]=Νέο παράθυρο
+Exec=firefox --new-window %u
+
+[Desktop Action NewPrivate]
+Name=New Private Window
+Name[el]=Νέο παράθυρο ιδιωτικής περιήγησης
+Exec=firefox --private-window %u
+
+[Desktop Action PrivateSearch]
+Name=Private search window
+Name[el]=Ιδιωτική αναζήτηση
+Exec=firefox --private-window https://startpage.com/do/mypage.pl?prf=ad35b4d08ebca5271cb02c9cb44fd4f0

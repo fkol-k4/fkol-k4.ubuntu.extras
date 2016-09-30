@@ -1,0 +1,253 @@
+#!/bin/bash
+
+#   File: $HOME/.local/bin/fkol-k4_build_a_bfq_kernel
+#   Type: Bash script
+
+#   Compile a ".deb"-based kernel with support for the BFQ IO scheduler
+#   Copyright (C) 2014 fkol-k4 (fkolyvas@gmail.com)
+
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation version 2.
+
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+
+#   You should have received a copy of the GNU General Public License along
+#   with this program; if not, write to the Free Software Foundation, Inc.,
+#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+
+##  SOURCES REPOSITORIES WARNING
+##  ============================
+clear
+echo -e "
+    Hello $USER.
+    
+This script is going to compile from source the latest stable version of
+Linux kernel.
+
+For this, it requires that sources repositories in your system are enabled,
+otherwise the build will fail.
+
+If they are not, cancel this program with \033[1mctrl + c\033[0m and enable them.
+
+If they already are enabled, press any key to continue and the script will
+install all necessary build dependency packages.
+"
+read -s -n 1 key
+
+
+##  GIT && KERNEL BUILD DEPENDENCIES INSTALLATION
+##  =============================================
+DEPENDENCIES_LIST=(
+    build-essential
+    dkms
+    fakeroot
+    git
+    kernel-package
+    kernel-wedge
+    libncurses5
+    libncurses5-dev
+    linux-headers-generic
+    makedumpfile
+    xterm
+    )
+
+sudo apt-get --yes install ${DEPENDENCIES_LIST[*]}
+sudo apt-get --yes build-dep linux-image-`uname -r`
+for dependency in ${DEPENDENCIES_LIST[*]}; do
+    sudo apt-get --yes install $dependency
+done
+sync
+
+
+##  CREATE WORKING DIRECTORY
+##  ========================
+working_dir=`zenity                                 \
+            --file-selection                        \
+            --directory                             \
+            --title="Choose a working directory..."`
+cd "$working_dir/"
+
+
+##  SELECT A KERNEL VERSION, DEFINE BUILD PARAMETERS
+##  ================================================
+clear
+echo -e "     Build is ready to begin.
+Now, you have to choose the kernel version you want to build. The options are:
+
+1. Ubuntu 10.04 Lucid Lynx          (LTS)
+2. Ubuntu 10.10 Maverick Meerkat
+3. Ubuntu 11.04 Natty Narwall
+4. Ubuntu 11.10 Oneiric Ocelot
+5. Ubuntu 12.04 Precice Pangolin    (LTS)
+6. Ubuntu 12.10 Quantal Quetzal
+7. Ubuntu 13.04 Raring Ringtail
+8. Ubuntu 13.10 Saucy Salamander
+9. Ubuntu 14.04 Trusty Tahr         (LTS)
+10. Ubuntu 14.10 Utopic Unicorn
+11. Ubuntu 15.04 Vivid Vervet
+12. Latest Git Mainline             (Linus Torvalds tree)
+13. Latest Mainline Stable          (Greg Kroah Hartmann)   ** DEFAULT **
+
+    Type the number written next to the kernel version that you want to compile
+and press \033[1mENTER\033[0m key.
+
+If you enter something different or just press ENTER, the program will default
+to fallback choise of the Mainline Linux Kernel."
+#   user input
+read -p "Enter your selection: " KERNEL_SELECTION
+#   tree selection
+if [[ $KERNEL_SELECTION == 1 ]]; then
+kernel_tree='git://kernel.ubuntu.com/ubuntu/ubuntu-lucid.git'           # 10.04
+    folder='ubuntu-lucid'
+elif [[ $KERNEL_SELECTION == X ]]; then
+    kernel_tree='git://kernel.ubuntu.com/ubuntu/ubuntu-maverick.git'    # 10.10
+    folder='ubuntu-maverick'
+elif [[ $KERNEL_SELECTION == X ]]; then
+    kernel_tree='git://kernel.ubuntu.com/ubuntu/ubuntu-natty.git'       # 11.04
+    folder='ubuntu-natty'
+elif [[ $KERNEL_SELECTION == X ]]; then
+    kernel_tree='git://kernel.ubuntu.com/ubuntu/ubuntu-oneiric.git'     # 11.10
+    folder='ubuntu-oneiric'
+elif [[ $KERNEL_SELECTION == X ]]; then
+    kernel_tree='git://kernel.ubuntu.com/ubuntu/ubuntu-precise.git'     # 12.04
+    folder='ubuntu-precise'
+elif [[ $KERNEL_SELECTION == X ]]; then
+    kernel_tree='git://kernel.ubuntu.com/ubuntu/ubuntu-quantal.git'     # 12.10
+    folder='ubuntu-quantal'
+elif [[ $KERNEL_SELECTION == X ]]; then
+    kernel_tree='git://kernel.ubuntu.com/ubuntu/ubuntu-raring.git'      # 13.04
+    folder=''
+elif [[ $KERNEL_SELECTION == X ]]; then
+    kernel_tree='git://kernel.ubuntu.com/ubuntu/ubuntu-saucy.git'       # 13.10
+    folder=''
+elif [[ $KERNEL_SELECTION == X ]]; then
+    kernel_tree='git://kernel.ubuntu.com/ubuntu/ubuntu-trusty.git'      # 14.04
+    folder=''
+elif [[ $KERNEL_SELECTION == X ]]; then
+    kernel_tree='git://kernel.ubuntu.com/ubuntu/ubuntu-utopic.git'      # 14.10
+    folder=''
+elif [[ $KERNEL_SELECTION == X ]]; then
+    kernel_tree='git://kernel.ubuntu.com/ubuntu/ubuntu-vivid.git'       # 15.04
+    folder=''
+elif [[ $KERNEL_SELECTION == X ]]; then
+    kernel_tree='https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git'   # Torvalds tree
+    folder=''
+else
+    kernel_tree='https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git'   # GKH tree
+    folder='stable-queue'
+fi
+#   search for tree directory, cd into it, cleanup & update.
+if [ -d "$working_dir/$folder" ]; 
+    cd "$folder/"
+    make clean
+    rm -f .config*
+    git reset --hard
+    git checkout master
+    for item in `git branch -l | grep -v master`; do
+        git branch -D "$item"
+    done
+    git pull
+else
+    git clone "$kernel_tree"
+    cd "$folder/"
+fi
+#   select kernel branch to build
+git tag -l > /tmp/kernel_tree_info.txt
+zenity --text-info --title="Copy branch name" --filename="/tmp/kernel_tree_info.txt"
+kernel_branch=`zenity --entry --title='Select branch' --text='Type branch'`
+if [[ `git tag -l | grep "$kernel_branch"` != "" ]]; then
+    git checkout -b fkol-k4-ubuntu $kernel_branch
+fi
+#   pause for (optional) patch download
+echo -e "    Do you want to apply any patches to your kernel?
+If yes, open a browser, go to the appropriate URL and download your patch.
+
+Example URL are following.
+-   BFQ I/O schedule:
+\033[1mhttp://algo.ing.unimo.it/people/paolo/disk_sched/sources.php\033[0m
+
+
+You have to download the appropriate version of the patch you want into the
+\033[1m$(pwd)/\033[0m directory.
+
+This script will pause until you press any key, so that it will give you the
+time to download any patches.
+
+\033[1mWhen you are finished, press any key to continue...\033[0m
+"
+#   wait for user input
+read -s -n 1 key
+#   apply in-directory patches
+git am *.patch
+
+
+##  COMPILE LINUX KERNEL
+##  ====================
+#   copy config
+cp -vi /boot/config-`uname -r` .config
+#   update config
+yes '' | make oldconig
+#   modify config
+make menuconfig
+#   define local version
+local_version=`zenity --entry                           \
+    --title='Kernel local version'                      \
+    --text='Enter your Kernel local version name...'`
+#   build kernel
+make -j`nproc` deb-pkg LOCALVERSION=-"$local_version"
+#   copy .deb files to $HOME
+cp -r ../*.deb $HOME/
+#   cleanup cruft
+make clean
+rm -f .config*
+git reset --hard
+git checkout master
+git branch -D fkol-k4-ubuntu
+
+
+##  ADD SPLASH SCREEN INITRAMFS MODULES
+##  ===================================
+#   vesa framebuffer
+if [ `cat /etc/initramfs-tools/modules | grep vesafb` != vesafb ]; then
+    echo vesafb | sudo tee -a /etc/initramfs-tools/modules
+fi
+#   framebuffer console
+if [ `cat /etc/initramfs-tools/modules | grep fbcon` != fbcon ]; then
+    echo fbcon | sudo tee -a /etc/initramfs-tools/modules
+fi
+sudo update-initramfs -u
+
+
+##  END SCRIPT MESSAGE
+##  ==================
+clear
+#   define icon for notification
+NOTIFY_ICON="/usr/share/icons/custom/Tux.svg"
+#   notify if possible
+if [[ `which notify-send` ]]; then
+    #   use notification icon if it exists
+    if [ -f "$NOTIFY_ICON" ]; then
+        notify-send -i "$NOTIFY_ICON" -t 3000 "All jobs finished. Check your terminal."
+    else
+        notify-send -t 3000  "All jobs finished. Check your terminal."
+    fi
+fi
+echo -e "
+    Ok $USER. all jobs are finished.
+
+    Press any key to exit....
+"
+#   wait for user input
+read -s -n 1 key
+echo -e "
+The terminal window will close in four (4) seconds.
+
+See you next time $USER
+"
+#   wait and exit
+sleep 4

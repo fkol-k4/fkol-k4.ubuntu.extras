@@ -1,0 +1,60 @@
+#!/bin/bash
+
+#   File: $HOME/.local/bin/fkol-k4_translator-box
+#   Type: Bash-Zenity script
+
+#   Online text translator (en → el)
+#   Copyright (C) 2014 fkol-k4 (fkolyvas@gmail.com)
+
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation version 2.
+
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+
+#   You should have received a copy of the GNU General Public License along
+#   with this program; if not, write to the Free Software Foundation, Inc.,
+#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+
+##  CHECK IF ZENITY IS INSTALLED, EXIT IF NOT
+##  =========================================
+if ! [[ `which zenity` ]]; then
+    if [[ `which notify-send` ]]; then
+        # send a notification if possible
+        notify-send -t 4000 "This script requires zenity to run.
+You can install zenity with
+sudo apt-get install zenity"
+    else
+        # fallback message
+        echo -e "This script requires zenity to run.
+You can install zenity with the command
+\033[1msudo apt-get install zenity\033[0m"
+    fi
+    exit
+fi
+
+##  PROMPT FOR INITIAL TO-BE-TRANSLATED TEXT INPUT
+##  ==============================================
+INPUT_TEXT=$(zenity --entry                                                 \
+                    --title="Translator box"                                \
+                    --width=400                                             \
+                    --text='Type "quit" to exit...'
+                    )
+
+##  NEXT TEXT INPUT LOOP, EXIT ON "quit"
+##  ====================================
+while [ "$INPUT_TEXT" != "quit" ]; do
+    ENCODED_TEXT=$(echo -n "$INPUT_TEXT" | perl -pe's/([^-_.~A-Za-z0-9])/sprintf("%%%02X", ord($1))/seg');
+    OUTPUT_URL="https://translate.google.gr/?hl=el#en/el/$ENCODED_TEXT"
+    xdg-open "$OUTPUT_URL"
+
+    INPUT_TEXT=$(zenity --entry                                             \
+                        --title="Translator box"                            \
+                        --width=400                                         \
+                        --text='Type "quit" to exit...'
+                        )
+done

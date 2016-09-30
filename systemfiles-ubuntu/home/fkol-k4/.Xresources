@@ -1,0 +1,38 @@
+! Xft settings ---------------------------------------------------------------
+
+Xft.antialias:  true
+Xft.dpi:        96
+Xft.hinting:    true
+Xft.hintstyle:  hintslight
+Xft.lcdfilter:  lcddefault
+Xft.rgba:       rgb
+
+! Use a nice truetype font and size by defaultfor Xterm
+xterm*faceName: DejaVu Sans Mono Book
+xterm*faceSize: 9
+
+! xterm scrollback
+xterm*savelines: 1000000
+
+! right hand side xterm scrollbar
+xterm*rightScrollBar: true
+xterm*ScrollBar: true
+
+! stop output to terminal from jumping down to bottom of scroll again
+xterm*scrollTtyOutput: false
+
+! xterm color setting
+xterm*foreground: rgb:AE/A7/9F
+xterm*background: rgb:00/00/00
+
+xterm*color0: rgb:DD/48/14
+xterm*color8: rgb:DD/48/14
+
+xterm*colorBDMode: true
+xterm*colorBD: rgb:DD/48/14
+
+! xterm geometry setting
+xterm*vt100*geometry: 100x25
+
+! xterm word separators
+xterm*charClass: 33:48,35:48,37:48,43:48,45-47:48,64:48,95:48,126:48

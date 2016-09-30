@@ -1,0 +1,32 @@
+[Desktop Entry]
+Name=Medit
+Comment=Alternative Text editor
+Comment[el]=Εναλλακτικός επεξεργαστής κειμένου
+Exec=medit %F
+Terminal=false
+Type=Application
+StartupNotify=true
+MimeType=text/plain;
+Icon=medit
+Categories=Utility;TextEditor;
+Actions=AsRoot;SourcesList;Fstab;Grub2;GrubCfg;
+
+[Desktop Action AsRoot]
+Name=Open as Root
+Exec=pkexec medit
+
+[Desktop Action SourcesList]
+Name=Open /etc/apt/sources.list
+Exec=pkexec medit /etc/apt/sources.list
+
+[Desktop Action Fstab]
+Name=Open /etc/fstab file
+Exec=pkexec medit /etc/fstab
+
+[Desktop Action Grub2]
+Name=Open /etc/default/grub file
+Exec=pkexec medit /etc/default/grub
+
+[Desktop Action GrubCfg]
+Name=Open /boot/grub/grub.cfg file
+Exec=pkexec medit /boot/grub/grub.cfg

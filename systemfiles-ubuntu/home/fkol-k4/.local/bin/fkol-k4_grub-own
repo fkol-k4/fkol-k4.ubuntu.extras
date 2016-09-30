@@ -1,0 +1,47 @@
+#!/bin/bash
+
+#   File: $HOME/.local/bin/fkol-k4_grub-own
+#   Type: Bash script
+
+#   Update GRUB2 config file and prompt for install to every disk on the system.
+#   Copyright (C) 2014 fkol-k4 (fkolyvas@gmail.com)
+
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation version 2.
+
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+
+#   You should have received a copy of the GNU General Public License along
+#   with this program; if not, write to the Free Software Foundation, Inc.,
+#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+
+##  CLEAR TERMINAL SCREEN
+##  =====================
+clear
+
+
+## 	UPDATE GRUB2 CONFIGURATION
+##	==========================
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+
+
+##  GRUB2 INSTALLATION PROCEDURE
+##	============================
+for disk in /dev/sd?; do
+    echo -e "
+GRUB2 configuration is updated. Do you want to install GRUB2 to \033[1m
+$disk\033[0m ?
+Type \033[1my\033[0m to install, or any other key to skip.
+Press Ctrl + C to exit this program."
+    read -p "Type here: " grub_install_answer
+    if [[ $grub_install_answer == y ]]; then
+        sudo grub-install --recheck "$disk"
+    else
+        echo -e "Ok $USER, skipping this disk..."
+    fi
+done

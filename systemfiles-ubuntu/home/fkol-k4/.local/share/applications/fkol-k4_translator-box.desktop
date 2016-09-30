@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Translator Box
+GenericName=Online translator
+Comment=Uses Google translate to translate user input string
+Categories=Network;Office;
+Keywords=Google;translation;translate;online;web;zenity
+Icon=/home/fkol-k4/.icons/translator-box.svg
+Exec=/home/fkol-k4/.local/bin/fkol-k4_translator-box

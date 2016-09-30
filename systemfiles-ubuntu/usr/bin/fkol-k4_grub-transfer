@@ -1,0 +1,80 @@
+#!/bin/bash
+
+#   File: $HOME/.local/bin/fkol-k4_grub-transfer
+# Type bash script
+
+#   Transfer GRUB entry to mounted distributions in a '/etc/40_custom' file
+#   Copyright (C) 2015 fkol-k4 fkolyvas@gmail.com
+
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation version 2 of the License.
+
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+
+#   You should have received a copy of the GNU General Public License along
+#   with this program; if not, write to the Free Software Foundation, Inc.,
+#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+#   SCRIPT VARIABLES DEFINITION
+#   ===========================
+#   We are going to create a GRUB2 entry that will be transfereed to the 
+#   /etc/grub.d/ directory of every mounted distribution on the system, in case
+#   our PC is dual or multi-booted. The entry's name is defined by the variable
+#   set below (naming scheme: 40_custom-$MY_DISTRO_NAME)
+#   The value below is an example.
+MY_DISTRO_NAME="MY_DISTRO_NAME"
+#   The mountpoint(s) list for every installed distribution that we want to
+#   transfer our GRUB2 entry to.
+#   In case the target distribution is installed directly inside a filesystem,
+#   (eg. in an ext4 partition), we need a direct mount point.
+#   In case the target distribution is installed inside a BTRFS subvolume, we
+#   only need the mountpoint of the partition containing that BTRFS subvolume.
+#   Each of those mountpoints must have its own /etc/fstab entry.
+#   The values below are an example.
+GRUB_TRANSFER_MOUNTPOINT_LIST=(
+    /mnt/Ubuntu-SSD
+    /mnt/Linux-HDD
+    )
+
+
+#   MAKE A GRUB2 ENTRY FOR ALL OTHER MOUNTED DISTROS
+#   ================================================
+#  Create temporary working directory
+/bin/mkdir -p /tmp/custom-grub
+
+#   Create GRUB2 entry
+/bin/echo '#!/bin/sh
+exec tail -n +3 $0
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the <exec tail> line above.
+' > /tmp/custom-grub/40_custom-$MY_DISTRO_NAME
+
+#   Create the rest of custom grub entry
+/bin/sed '/### BEGIN \/etc\/grub.d\/10_linux ###/,/### END \/etc\/grub.d\/10_linux ###/!d' /boot/grub/grub.cfg > /tmp/custom-grub/stage1
+/bin/sed '/menuentry/,/### END \/etc\/grub.d\/10_linux ###/!d' /tmp/custom-grub/stage1 >> "/tmp/custom-grub/40_custom-$MY_DISTRO_NAME"
+
+#   Give custom grub entry executable permissions
+/bin/chmod +x "/tmp/custom-grub/40_custom-$MY_DISTRO_NAME"
+
+#   COPY CUSTOM GRUB ENTRY FILE TO ALL PREDETERMINED MOUNT POINTS
+#   =============================================================
+for mountpoint in ${GRUB_TRANSFER_MOUNTPOINT_LIST[*]}; do
+    if [ -d $mountpoint/etc/grub.d ]; then
+        # Copy GRUB2 entry if we have a distribution's direct mountpoint
+        /bin/cp "/tmp/custom-grub/40_custom-$MY_DISTRO_NAME" $mountpoint/etc/grub.d/
+    fi
+    for subvolume in $mountpoint/*; do
+        # Copy GRUB2 entry if we have a mountpoint for a subvolume's partition
+        if [ -d $subvolume/etc/grub.d ]; then
+            /bin/cp "/tmp/custom-grub/40_custom-$MY_DISTRO_NAME" $subvolume/etc/grub.d/
+        fi
+    done
+done
+
+#   Delete custom grub entry from own /etc/grub.d/ directory
+/bin/rm -f "/etc/grub.d/40_custom-$MY_DISTRO_NAME"

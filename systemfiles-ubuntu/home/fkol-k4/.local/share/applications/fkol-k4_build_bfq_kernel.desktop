@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application;
+Name=Build A Kernel
+GenericName=Builder
+Comment=Build a custom Linux Kernel and patch it with BFQ I/O scheduler support (optional)
+Comment[el]=Χτίσιμο πυρήνα Linux με (προαιρετική) υποστήριξη για τον BFQ I/O scheduler
+Categories=Development;Utility;ConsoleOnly;
+Keywords=Linux;Kernel;BFQ;custom;IO;scheduler;Con;Kolivas;Linus;Torvalds;Ubuntu;Build;Compile
+Keywords[el]=Πυρήνας;Μεταγλώττιση;Χτίσιμο;
+Icon=/home/fkol-k4/.icons/Tux.svg
+Exec=/home/fkol-k4/.local/bin/fkol-k4_build_bfq_kernel
+Terminal=true
+NoDisplay=false

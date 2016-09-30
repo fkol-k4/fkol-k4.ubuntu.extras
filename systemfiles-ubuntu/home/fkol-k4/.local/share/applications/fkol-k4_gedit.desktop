@@ -1,0 +1,50 @@
+[Desktop Entry]
+Name=gedit
+GenericName=Text Editor
+Comment=Edit text files
+Exec=gedit %U
+Terminal=false
+Type=Application
+StartupNotify=true
+MimeType=text/plain;
+#Icon=accessories-text-editor
+Icon=/usr/share/gedit/logo/gedit-logo.png
+Categories=GNOME;GTK;Utility;TextEditor;
+X-GNOME-DocPath=gedit/gedit.xml
+X-GNOME-FullName=Text Editor
+X-GNOME-Bugzilla-Bugzilla=GNOME
+X-GNOME-Bugzilla-Product=gedit
+X-GNOME-Bugzilla-Component=general
+X-GNOME-Bugzilla-Version=3.10.4
+X-GNOME-Bugzilla-ExtraInfoScript=/usr/share/gedit/gedit-bugreport
+Keywords=Text;Editor;Plaintext;Write;
+X-Ubuntu-Gettext-Domain=gedit
+Actions=NewWindow;NewDocument;AsRoot;SourcesList;Fstab;Grub2;GrubCfg;
+
+[Desktop Action NewWindow]
+Name=Open a New Window
+Exec=gedit --new-window
+
+[Desktop Action NewDocument]
+Name=Open a New Document
+Exec=gedit --new-document
+
+[Desktop Action AsRoot]
+Name=Open as Root
+Exec=pkexec gedit
+
+[Desktop Action SourcesList]
+Name=Open /etc/apt/sources.list
+Exec=pkexec gedit /etc/apt/sources.list
+
+[Desktop Action Fstab]
+Name=Open /etc/fstab file
+Exec=pkexec gedit /etc/fstab
+
+[Desktop Action Grub2]
+Name=Open /etc/default/grub file
+Exec=pkexec gedit /etc/default/grub
+
+[Desktop Action GrubCfg]
+Name=Open /boot/grub/grub.cfg file
+Exec=pkexec gedit /boot/grub/grub.cfg
