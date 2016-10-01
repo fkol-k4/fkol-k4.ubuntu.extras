@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=My Launchers Fix
+GenericName=Custom Launchers Fixing Tool
+Icon=desktop-effects
+Exec=bash -c "chmod +x $USER/.local/share/applications/*.desktop"
+#Path=/home/fkol-k4/.local/share/applications
+NoDisplay=false
+Categories=DesktopSettings;FileTools;Utility;
+StartupNotify=false
+Terminal=false

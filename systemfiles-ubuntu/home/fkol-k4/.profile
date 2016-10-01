@@ -8,6 +8,11 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 
-# source .bashrc
+
+#   Add ~/.bin/ && ~/.local/bin/ to PATH:
+[[ -d "$HOME/.local/bin" ]] && PATH="$PATH:$HOME/.local/bin" && export PATH
+
+
+#   Source .bashrc
 [[ -f "$HOME/.bashrc" ]] &&	. "$HOME/.bashrc"
 

@@ -143,6 +143,3 @@ function fkol_DE_reset() {
     rm -rf $HOME/.cinnamon
 }
 
-#   Add ~/.bin/ && ~/.local/bin/ to PATH:
-[[ -d "$HOME/.local/bin" ]] && PATH="$PATH:$HOME/.local/bin" && export PATH
-

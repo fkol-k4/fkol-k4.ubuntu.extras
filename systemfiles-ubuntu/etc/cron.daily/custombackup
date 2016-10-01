@@ -20,6 +20,6 @@
 #   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 
-if [[ -d /Files ]] && [[ -d /Backup ]]; then
-    rsync -aqz --log-file=/Backup/rsync-backup.log /Files/ /Backup/
-fi
+#if [[ -d /Files ]] && [[ -d /Backup ]]; then
+#    rsync -aqz --log-file=/Backup/rsync-backup.log /Files/ /Backup/
+#fi

@@ -5,8 +5,8 @@ GenericName=System updates
 Comment=Auto updates for Ubuntu-based systems
 Categories=Utility;System;ConsoleOnly;
 Keywords=Auto;Updates;Ubuntu;Based;
-Icon=/home/fkol-k4/.icons/donkey-grey-square.svg
-Exec=/home/fkol-k4/.local/bin/fkol-k4_ubuntu-updates
+Icon=donkey-grey-square.svg
+Exec=fkol-k4.ubuntu_updates
 Terminal=true
 Actions=Reboot;ShutDown;
 

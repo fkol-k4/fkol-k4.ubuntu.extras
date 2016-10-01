@@ -1,0 +1,30 @@
+[Desktop Entry]
+Type=Application
+Name=Scratch
+Comment=Edit text files
+GenericName=Text Editor
+Exec=scratch-text-editor %U
+Icon=accessories-text-editor
+Terminal=false
+Categories=GNOME;GTK;Utility;TextEditor;
+Keywords=Notepad;IDE;Plain;Editor;Text;
+MimeType=text/plain;
+StartupNotify=true
+Actions=NewWindow;NewDocument;AboutDialog;AsRoot;
+X-GNOME-Gettext-Domain=scratch-text-editor
+
+[Desktop Action NewDocument]
+Name=New Document
+Exec=scratch-text-editor --new-tab
+
+[Desktop Action NewWindow]
+Name=New Window
+Exec=scratch-text-editor --new-window
+
+[Desktop Action AsRoot]
+Name=Open As Root
+Exec=pkexec scratch-text-editor --new-window
+
+[Desktop Action AboutDialog]
+Exec=scratch-text-editor --about
+Name=About Scratch

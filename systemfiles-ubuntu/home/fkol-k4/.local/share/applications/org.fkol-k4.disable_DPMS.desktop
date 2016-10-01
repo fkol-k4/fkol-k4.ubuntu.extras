@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Disable DPMS
+Encoding=UTF-8
+Version=0.9.4
+Type=Application
+Comment=Prevents screen from blanking
+Exec=fkol-k4.disable_dpms
+Icon=system-lock-screen
+StartupNotify=false
+Terminal=false
+Hidden=false

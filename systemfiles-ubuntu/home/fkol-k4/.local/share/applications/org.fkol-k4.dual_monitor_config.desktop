@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Dual Monitor Settings
+GenericName=Dual Monitor Configurator
+Icon=fkol-k4.dual-screen.svg
+TryExec=/usr/local/bin/fkol-k4.dual_monitor_config
+Exec=fkol-k4.dual_monitor_config
+NoDisplay=false
+Categories=DesktopSettings;Utility;
+Keywords=Monitor,Dual,Screen,fkol
+StartupNotify=false
+Terminal=false

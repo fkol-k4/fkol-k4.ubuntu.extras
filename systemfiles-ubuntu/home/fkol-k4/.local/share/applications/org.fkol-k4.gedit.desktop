@@ -19,7 +19,7 @@ X-GNOME-Bugzilla-Version=3.10.4
 X-GNOME-Bugzilla-ExtraInfoScript=/usr/share/gedit/gedit-bugreport
 Keywords=Text;Editor;Plaintext;Write;
 X-Ubuntu-Gettext-Domain=gedit
-Actions=NewWindow;NewDocument;AsRoot;SourcesList;Fstab;Grub2;GrubCfg;
+Actions=NewWindow;NewDocument;AsRoot;
 
 [Desktop Action NewWindow]
 Name=Open a New Window
@@ -32,19 +32,3 @@ Exec=gedit --new-document
 [Desktop Action AsRoot]
 Name=Open as Root
 Exec=pkexec gedit
-
-[Desktop Action SourcesList]
-Name=Open /etc/apt/sources.list
-Exec=pkexec gedit /etc/apt/sources.list
-
-[Desktop Action Fstab]
-Name=Open /etc/fstab file
-Exec=pkexec gedit /etc/fstab
-
-[Desktop Action Grub2]
-Name=Open /etc/default/grub file
-Exec=pkexec gedit /etc/default/grub
-
-[Desktop Action GrubCfg]
-Name=Open /boot/grub/grub.cfg file
-Exec=pkexec gedit /boot/grub/grub.cfg

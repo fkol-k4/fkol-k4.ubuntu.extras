@@ -1,0 +1,10 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Chars Indicator
+Comment=Indicator for UTF-8 characters
+Exec=/opt/indicator-chars/indicator-chars.py
+Icon=/opt/indicator-chars/light16x16.svg
+Terminal=false
+

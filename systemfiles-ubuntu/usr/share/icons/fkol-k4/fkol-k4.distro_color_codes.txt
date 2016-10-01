@@ -2,6 +2,6 @@ ArchLinux Blue          :   1793D1
 Canonical Aubergine     :   772953
 Debian Red              :   D70A53
 Fedora Blue             :   3C6EB4
-Ubuntu Orange           :   DD4814
+Ubuntu Orange           :   E95420
 Ubuntu Bright Orange    :   FF4012
 

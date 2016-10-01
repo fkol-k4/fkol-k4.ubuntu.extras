@@ -1,0 +1,16 @@
+[Desktop Entry]
+Name=Medit
+Comment=Alternative Text editor
+Comment[el]=Εναλλακτικός επεξεργαστής κειμένου
+Exec=medit %F
+Terminal=false
+Type=Application
+StartupNotify=true
+MimeType=text/plain;
+Icon=medit
+Categories=Utility;TextEditor;
+Actions=AsRoot;
+
+[Desktop Action AsRoot]
+Name=Open as Root
+Exec=pkexec medit

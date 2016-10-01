@@ -17,7 +17,7 @@ X-MATE-Bugzilla-Product=Pluma
 X-MATE-Bugzilla-Component=general
 X-MATE-Bugzilla-Version=1.8.1
 X-MATE-Bugzilla-ExtraInfoScript=/usr/lib/pluma/pluma-bugreport.sh
-Actions=NewWindow;NewDocument;AsRoot;SourcesList;Fstab;Grub2;GrubCfg;
+Actions=NewWindow;NewDocument;AsRoot;
 
 [Desktop Action NewWindow]
 Name=Open a New Window
@@ -30,19 +30,3 @@ Exec=pluma --new-document
 [Desktop Action AsRoot]
 Name=Open as Root
 Exec=pkexec pluma
-
-[Desktop Action SourcesList]
-Name=Open /etc/apt/sources.list
-Exec=pkexec pluma /etc/apt/sources.list
-
-[Desktop Action Fstab]
-Name=Open /etc/fstab file
-Exec=pkexec pluma /etc/fstab
-
-[Desktop Action Grub2]
-Name=Open /etc/default/grub file
-Exec=pkexec pluma /etc/default/grub
-
-[Desktop Action GrubCfg]
-Name=Open /boot/grub/grub.cfg file
-Exec=pkexec pluma /boot/grub/grub.cfg

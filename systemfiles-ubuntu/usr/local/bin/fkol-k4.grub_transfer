@@ -36,10 +36,9 @@ MY_DISTRO_NAME="MY_DISTRO_NAME"
 #   Each of those mountpoints must have its own /etc/fstab entry.
 #   The values below are an example.
 GRUB_TRANSFER_MOUNTPOINT_LIST=(
-    /mnt/Ubuntu-SSD
-    /mnt/Linux-HDD
+    /mount/point_1
+    /mount/point_2
     )
-
 
 #   MAKE A GRUB2 ENTRY FOR ALL OTHER MOUNTED DISTROS
 #   ================================================
