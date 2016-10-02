@@ -25,7 +25,7 @@ Description=Transfer GRUB entry to mounted distributions
 Type=oneshot
 RemainAfterExit=true
 ExecStart=/bin/true
-ExecStop=/bin/bash /usr/local/bin/fkol-k4.grub_
+ExecStop=/bin/bash /usr/local/bin/fkol-k4.grub_transfer
 transfer
 
 [Install]

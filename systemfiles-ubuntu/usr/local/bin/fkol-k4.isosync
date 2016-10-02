@@ -3,7 +3,7 @@
 #   File: $HOME/.local/bin/fkol-k4_daily-iso-sync
 #   Type: Bash script
 
-#   Sync daily Iso images for Ubuntu && flavours
+#   Sync Iso images for Ubuntu && flavours
 #   Copyright (C) 2014 fkol-k4 (fkolyvas@gmail.com)
 
 #   This program is free software; you can redistribute it and/or modify
@@ -20,237 +20,90 @@
 #   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 
-##  CHECK IF ZSYNC IS INSTALLED, NOTIFY AND EXIT IF NOT
-##  ===================================================
-if ! [[ `which zsync` ]]; then
+#   Check if zsync is installed, install it if not.
+function check_zsync() {
+    if ! [[ `which zsync` ]]; then
+        clear
+        echo; echo "The 'zsync' program is needed for this script."
+        echo "Wait for zsync to be installed, or hit 'ctrl-c' to abort script..."
+        sleep 4; sudo apt-get --yes install zsync; sync
+    fi
+}
+check_zsync
+
+
+#   .iso image naming scheme
+function set_distro_flavour() {
+    # define wanted flavour .iso file
+    #distro_flavour="ubuntu"
+    #distro_flavour="xubuntu"
+    #distro_flavour="lubuntu"
+    #distro_flavour="ubuntu-mate"
+}
+function set_distro_variables() {
+    # distribution version
+    distro_version="$(lsb_release -sd | awk '$0 {print $2}')"
+    # distribution architecture
+    if arch==x86_64; then
+        distro_arch="amd64"
+    else
+        distro_arch="i386"
+    fi
+    # .iso image filename
+    iso_name="$distro_flavour-$distro_version-desktop-$distro_arch.iso"
+    # .zsync file url
+    if [[ $distro_flavour == "ubuntu" ]]; then
+        zsync_url="http://releases.ubuntu.com/$distro_version/$iso_name.zsync"
+    else
+        zsync_url="http://releases.ubuntu.com/$distro_flavour/releases/$distro_version/release/$iso_name.zsync"
+    fi
+}
+function set_zsync_url() {
+}
+set_distro_flavour
+set_distro_variables
+
+
+#   cd to downloads folder & sync iso image
+function set_target_folder() {
+    iso_path="$HOME/Downloads/Linux/Distro-ISOs/$(lsb_release -sd)"
+    clear; echo -e "Setting downloads folder as '$iso_path'"
+    echo; echo 'Please wait...'; sleep 3
+    mkdir -p "$iso_path"
+    cd "$iso_path/"
+    echo; echo
+}
+set_target_folder
+zsync "$zsync_url"
+sync
+rm -f *.zs-old
+
+
+#   User input to exit script
+function notify_user() {
+    echo; echo; echo; echo
+    echo 'Iso images synchronization is finished.'
+    echo 'Press any button to terminate this script...'
+    echo; echo; echo; echo
+    if [ `which notify-send` ]; then
+        # Send notification if `notify-send` is installed
+        Icon="/usr/share/icons/fkol-k4/fkol-k4.donkey.svg"
+        message="Script completed. Please check your terminal"
+        [[ -e "$Icon" ]] && notify-send -i "$Icon" -t 4000  "$message"
+        [[ ! -e "$Icon" ]] && notify-send -t 4000  "$message"
+    fi
+}
+function wait_to_exit() {
+    # -s: do not echo input character
+    # -n 1: read only 1 character (separate with space)
+    read -s -n 1 key
     clear
-    echo "    'zsync' program is needed for this script.
-Enter your password so the program can install it.
-
-If you don't want to enter your password, close this script (Ctrl + C),
-install zsync and run the program again."
-    sudo apt-get --yes --force-yes install zsync
-    [[ `which notify-send` ]] && notify-send -t 4000 "zsync is required. Enter password to install:"
-fi
-
-
-##  DEFINE ISO DIRECTORY PATH 
-##  =========================
-ISO_PATH="/Files/Downloads/Linux/Distro-ISOs/Ubuntu"
-
-
-## 	DEFINE FUNCTIONS
-##	================
-change_to () {
-	flavour_path=$1
-	mkdir -p "/Files/Downloads/Linux/Distro-ISOs/Ubuntu/$flavour_path"
-	cd "/Files/Downloads/Linux/Distro-ISOs/Ubuntu/$flavour_path/"
+    echo; echo; echo
+    echo 'Key pressed!'; echo
+    echo 'The terminal window will close in four (4) seconds.'
+    echo "See you next time $USER"
+    sleep 4; clear
 }
-cleanup () {
-	sync
-	rm -f *.zs-old
-}
-
-
-## 	Download Ubuntu Desktop ISO images
-## 	==================================
-#	download directory
-flavour="Ubuntu_Desktop"
-change_to "$flavour"
-# 	12.04 Precise Pangolin
-zsync -i Ubuntu-12.04-dvd-amd64.iso -o Ubuntu-12.04-dvd-amd64.iso               \
-    http://cdimage.ubuntu.com/precise/dvd/current/precise-dvd-amd64.iso.zsync
-zsync -i Ubuntu-12.04-dvd-i386.iso -o Ubuntu-12.04-dvd-i386.iso                 \
-    http://cdimage.ubuntu.com/precise/dvd/current/precise-dvd-i386.iso.zsync
-# 	14.04 Trusty Tahr
-zsync -i Ubuntu-14.04-amd64.iso -o Ubuntu-14.04-amd64.iso                       \
-    http://cdimage.ubuntu.com/trusty/daily-live/current/trusty-desktop-amd64.iso.zsync
-zsync -i Ubuntu-14.04-i386.iso -o Ubuntu-14.04-i386.iso                         \
-    http://cdimage.ubuntu.com/trusty/daily-live/current/trusty-desktop-i386.iso.zsync
-# 	14.10 Utopic Unicorn
-zsync -i Ubuntu-14.10-amd64.iso -o Ubuntu-14.10-amd64.iso                       \
-    http://releases.ubuntu.com/utopic/ubuntu-14.10-desktop-amd64.iso.zsync
-zsync -i Ubuntu-14.10-i386.iso -o Ubuntu-14.10-i386.iso                         \
-    http://releases.ubuntu.com/utopic/ubuntu-14.10-desktop-i386.iso.zsync
-# 	15.04 Vivid Vervet
-zsync -i Ubuntu-15.04-amd64.iso -o Ubuntu-15.04-amd64.iso                       \
-    http://cdimage.ubuntu.com/daily-live/current/vivid-desktop-amd64.iso.zsync
-zsync -i Ubuntu-15.04-i386.iso -o Ubuntu-15.04-i386.iso                         \
-    http://cdimage.ubuntu.com/daily-live/current/vivid-desktop-i386.iso.zsync
-
-#	cleanup
-cleanup
-
-
-## 	Download Kubuntu ISO images
-## 	===========================
-#	download directory
-flavour="Kubuntu"
-change_to "$flavour"
-#	15.04 Vivid Vervet
-zsync -i Kubuntu-15.04-amd64.iso -o Kubuntu-15.04-amd64.iso                     \
-    http://cdimage.ubuntu.com/kubuntu/daily-live/current/vivid-desktop-amd64.iso.zsync
-zsync -i Kubuntu-15.04-i386.iso -o Kubuntu-15.04-i386.iso                       \
-    http://cdimage.ubuntu.com/kubuntu/daily-live/current/vivid-desktop-i386.iso.zsync
-#	cleanup
-cleanup
-
-
-## 	Download Xubuntu ISO images
-## 	===========================
-#	download directory
-flavour="Xubuntu"
-change_to "$flavour"
-#	14.10 Utopic Unicorn
-zsync -i Xubuntu-14.10-amd64.iso -o Xubuntu-14.10-amd64.iso                     \
-    http://cdimage.ubuntu.com/xubuntu/releases/utopic/release/xubuntu-14.10-desktop-amd64.iso.zsync
-zsync -i Xubuntu-14.10-i386.iso -o Xubuntu-14.10-i386.iso                       \
-    http://cdimage.ubuntu.com/xubuntu/releases/utopic/release/xubuntu-14.10-desktop-i386.iso.zsync
-#	15.04 Vivid Vervet
-zsync -i Xubuntu-15.04-amd64.iso -o Xubuntu-15.04-amd64.iso                     \
-    http://cdimage.ubuntu.com/xubuntu/daily-live/current/vivid-desktop-i386.iso.zsync
-zsync -i Xubuntu-15.04-i386.iso -o Xubuntu-15.04-i386.iso                       \
-    http://cdimage.ubuntu.com/xubuntu/daily-live/current/vivid-desktop-amd64.iso.zsync
-#	cleanup
-cleanup
-
-
-## 	Download Lubuntu ISO images
-## 	===========================
-#	download directory
-flavour="Lubuntu"
-change_to "$flavour"
-#	15.04 Vivid Vervet
-zsync -i Lubuntu-15.04-amd64.iso -o Lubuntu-15.04-amd64.iso                     \
-    http://cdimage.ubuntu.com/lubuntu/daily-live/current/vivid-desktop-amd64.iso.zsync
-zsync -i Lubuntu-15.04-i386.iso -o Lubuntu-15.04-i386.iso                       \
-    http://cdimage.ubuntu.com/lubuntu/daily-live/current/vivid-desktop-i386.iso.zsync
-#	cleanup
-cleanup
-
-
-## 	Download Ubuntu Desktop Next ISO images
-## 	=======================================
-#	download directory
-flavour="Ubuntu_Desktop_Next"
-change_to "$flavour"
-#	15.04 Vivid Vervet
-zsync -i Ubuntu_Desktop_Next-15.04-amd64.iso -o Ubuntu_Desktop_Next-15.04-amd64.iso \
-    http://cdimage.ubuntu.com/ubuntu-desktop-next/daily-live/current/vivid-desktop-amd64.iso.zsync
-#	cleanup
-cleanup
-
-
-## 	Download Ubuntu MATE ISO images
-## 	===============================
-#	download directory
-flavour="Ubuntu_MATE"
-change_to "$flavour"
-#	14.04.1 Trusty Tahr
-if ! [[ -f Ubuntu_MATE-14.04.1-amd64.iso ]]; then
-	wget -O Ubuntu_MATE-14.04.1-amd64.iso                                       \
-    https://ubuntu-mate.r.worldssl.net/trusty/ubuntu-mate-14.04.1-final-desktop-amd64.iso
-fi
-if ! [[ -f Ubuntu_MATE-14.04.1-i386.iso ]]; then
-	wget -O Ubuntu_MATE-14.04.1-i386.iso                                        \
-    https://ubuntu-mate.r.worldssl.net/trusty/ubuntu-mate-14.04.1-final-desktop-i386.iso
-fi
-#	14.04.2 Trusty Tahr
-if ! [[ -f Ubuntu_MATE-14.04.2-amd64.iso ]]; then
-	wget -O Ubuntu_MATE-14.04.2-amd64.iso                                       \
-    https://ubuntu-mate.r.worldssl.net/trusty/ubuntu-mate-14.04.2-LTS-desktop-amd64.iso
-fi
-if ! [[ -f Ubuntu_MATE-14.04.2-i386.iso ]]; then
-	wget -O Ubuntu_MATE-14.04.21-i386.iso                                        \
-    https://ubuntu-mate.r.worldssl.net/trusty/ubuntu-mate-14.04.2-LTS-desktop-i386.iso
-fi
-# 	14.10 Utopic Unicorn
-if ! [[ -f Ubuntu_MATE-14.10-amd64.iso ]]; then
-	wget -O Ubuntu_MATE-14.10-amd64.iso                                         \
-    https://ubuntu-mate.r.worldssl.net/utopic/ubuntu-mate-14.10-desktop-amd64.iso
-fi
-if ! [[ -f Ubuntu_MATE-14.10-i386.iso ]]; then
-	wget -O Ubuntu_MATE-14.10-i386.iso                                          \
-    https://ubuntu-mate.r.worldssl.net/utopic/ubuntu-mate-14.10-desktop-i386.iso
-fi
-## 	15.04 Vivid Vervet
-zsync -i Ubuntu_MATE-15.04-amd64.iso -o Ubuntu_MATE-15.04-amd64.iso             \
-    http://cdimage.ubuntu.com/ubuntu-mate/daily-live/current/vivid-desktop-amd64.iso.zsync
-zsync -i Ubuntu_MATE-15.04-i386.iso -o Ubuntu_MATE-15.04-i386.iso               \
-    http://cdimage.ubuntu.com/ubuntu-mate/daily-live/current/vivid-desktop-i386.iso.zsync
-#	cleanup
-cleanup
-
-
-## 	Download Ubuntu Minimal ISO images
-## 	==================================
-#	download directory
-flavour="Ubuntu_Minimal"
-change_to "$flavour"
-#	12.04 Precise Pangolin
-if ! [[ -f precise-mini-amd64.iso ]]; then
-    wget -O precise-mini-amd64.iso 					\
-	http://archive.ubuntu.com/ubuntu/dists/precise-updates/main/installer-amd64/current/images/netboot/mini.iso
-fi
-if ! [[ -f precise-mini-i386.iso ]]; then
-    wget -O precise-mini-i386.iso 					\
-	http://archive.ubuntu.com/ubuntu/dists/precise-updates/main/installer-i386/current/images/netboot/mini.iso
-fi
-if ! [[ -f precise-mini-i386-non-pae.iso ]]; then
-    wget -O precise-mini-i386-non-pae.iso           \
-	http://archive.ubuntu.com/ubuntu/dists/precise-updates/main/installer-i386/current/images/netboot/non-pae/mini.iso
-fi
-if ! [[ -f precise-mini-amd64-HWE.iso ]]; then
-    wget -O precise-mini-amd64-HWE.iso				\
-	http://archive.ubuntu.com/ubuntu/dists/precise-updates/main/installer-amd64/current/images/trusty-netboot/mini.iso
-fi
-if ! [[ -f precise-mini-i386-HWE.iso ]]; then
-    wget -O precise-mini-i386-HWE.iso				\
-	http://archive.ubuntu.com/ubuntu/dists/precise-updates/main/installer-i386/current/images/trusty-netboot/mini.iso
-fi
-# 	14.04 Trusty Tahr
-if ! [[ -f trusty-mini-amd64.iso ]]; then
-    wget -O trusty-mini-amd64.iso					\
-	http://archive.ubuntu.com/ubuntu/dists/trusty-updates/main/installer-amd64/current/images/netboot/mini.iso
-fi
-if ! [[ -f trusty-mini-i386.iso ]]; then
-    wget -O trusty-mini-i386.iso					\
-	http://archive.ubuntu.com/ubuntu/dists/trusty-updates/main/installer-i386/current/images/netboot/mini.iso
-fi
-# 	14.10 Utopic Unicorn
-if ! [[ -f utopic-mini-amd64.iso ]]; then
-    wget -O utopic-mini-amd64.iso					\
-	http://archive.ubuntu.com/ubuntu/dists/utopic-updates/main/installer-amd64/current/images/netboot/mini.iso
-fi
-if ! [[ -f utopic-mini-i386.iso ]]; then
-    wget -O utopic-mini-i386.iso					\
-	http://archive.ubuntu.com/ubuntu/dists/utopic-updates/main/installer-i386/current/images/netboot/mini.iso
-fi
-
-
-##  USER INPUT TO EXIT SCRIPT
-##	=========================
-echo '
-
-    Iso images synchronization is finished.
-
-    Press any button to terminate this script.
-'
-#   Send notification ** if possible **
-if [ `which notify-send` ]; then
-    notify-send -i  /usr/share/icons/custom/donkey.svg -t 3000  "Script completed. Please check your terminal"
-fi
-
-# -s: do not echo input character
-# -n 1: read only 1 character (separate with space)
-read -s -n 1 key
-clear
-echo "
-    Key pressed!
-
-The terminal window will close in four (4) seconds."
-echo "
-    See you next time" $USER
-sleep 4
-
+notify_user
+wait_to_exit
 exit

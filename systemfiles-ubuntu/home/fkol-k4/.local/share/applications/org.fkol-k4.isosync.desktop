@@ -1,10 +1,16 @@
 [Desktop Entry]
 Type=Application
-Name=Ubuntu Iso sync
+Name=IsoSync
+Name[el]=Συγχρονισμός Iso διανομής
 GenericName=Iso sync
-Comment=Synchronises daily-live Ubuntu-dev iso images locally.
+GenericName[el]=Συγχρονισμός Iso
+Comment=Synchronises iso images locally.
+Comment[el]=Συγχρονίζει τοπικά εικόνες iso.
 Categories=Utility;Network;ConsoleOnly;
 Keywords=ubuntu;iso;image;daily;live;sync;zsync;local;CD;
-Icon=fkol-k4.ubuntu-square.svg
-Exec=fkol-k4.isosync
+Keywords[el]=Συγχρονισμός;Εικόνα;τοπικά;Ημερήσια;
+Icon=/usr/share/icons/fkol-k4/fkol-k4.ubuntu.square.svg
+#TryExec=/usr/local/bin/fkol-k4.isosync
+Exec=/usr/local/bin/fkol-k4.isosync
+#Exec=fkol-k4.isosync
 Terminal=true
