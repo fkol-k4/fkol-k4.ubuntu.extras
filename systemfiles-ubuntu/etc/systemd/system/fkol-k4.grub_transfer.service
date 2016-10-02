@@ -26,7 +26,6 @@ Type=oneshot
 RemainAfterExit=true
 ExecStart=/bin/true
 ExecStop=/bin/bash /usr/local/bin/fkol-k4.grub_transfer
-transfer
 
 [Install]
 WantedBy=multi-user.target

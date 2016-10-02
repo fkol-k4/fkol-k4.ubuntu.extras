@@ -5,7 +5,7 @@ GenericName=P2P player
 Comment=Streams movies via p2p protocoll
 Categories=AudioVideo;Network;
 Keywords=Popcorn;Torrent;Movie;Film;Illegal;Stream;P2P;YTS;YiFi;Live
-Icon=popcorntime.svg
+Icon=/usr/share/icons/fkol-k4/popcorntime.svg
 Exec=/opt/Popcorn-Time/Popcorn-Time
 Actions=ClearCache;KillPopcorn;ClearTemp;
 
