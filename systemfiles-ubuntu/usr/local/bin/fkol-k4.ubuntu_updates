@@ -68,10 +68,11 @@ sudo apt-get --yes --fix-missing install
 sudo apt-get --yes --fix-broken install
 sudo dpkg --configure -a
 sync
+#   Update databases
+sudo apt-file update
+sudo updatedb
 
 
-#   GRUB2 HANDLING
-#   ==============
 #   Update GRUB2 configuration
 #   sudo grub-mkconfig -o /boot/grub/grub.cfg
 # 	Install GRUB to $GRUB_TARGET
@@ -81,7 +82,6 @@ sync
 
 
 #   USER NOTIFICATION && UPDATES SCRIPT EXIT
-#   ========================================
 #   Notify $USER on terminal
 echo "    Updates script completed."
 echo "    ─────────────────────────"

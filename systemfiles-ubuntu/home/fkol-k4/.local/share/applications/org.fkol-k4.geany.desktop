@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Version=1.0
-Name=Geany
+Name=Geany (fkol-k4)
 GenericName=Integrated Development Environment
 Comment=A fast and lightweight IDE using GTK2
 Exec=geany %F

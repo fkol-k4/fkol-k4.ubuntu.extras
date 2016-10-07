@@ -1,0 +1,17 @@
+
+[Desktop Entry]
+Name=Mousepad (fkol-k4)
+Comment=Simple Text Editor
+GenericName=Text Editor
+Exec=mousepad %F
+Icon=accessories-text-editor
+Terminal=false
+StartupNotify=true
+Type=Application
+Categories=Utility;TextEditor;GTK;
+MimeType=text/plain;
+Actions=AsRoot;
+
+[Desktop Action AsRoot]
+Name=Open as Root
+Exec=pkexec medit

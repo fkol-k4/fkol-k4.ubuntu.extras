@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Medit
+Name=Medit (fkol-k4)
 Comment=Alternative Text editor
 Comment[el]=Εναλλακτικός επεξεργαστής κειμένου
 Exec=medit %F

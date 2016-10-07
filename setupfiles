@@ -24,10 +24,8 @@
 function copy_pool_to_system() {
     clear
     echo "1. Copying extra files from pool to system. Please wait..."; sleep 3
-    file_pool_folder="$HOME/my-ubuntu-extras/systemfiles-ubuntu"
-    sudo cp -r "$pool/etc/*" /etc/
-    cp -r "$pool/home*" /home/
-    sudo cp -r "$pool/usr/*" /usr/
+    file_pool_folder="$HOME/fkol-k4.ubuntu.extras/systemfiles-ubuntu"
+    sudo cp -r $pool/* /
 }
 copy_pool_to_system
 
@@ -35,9 +33,10 @@ copy_pool_to_system
 #   Set permissions
 function set_permissions() {
     clear
-    echo "1. Copying extra files from pool to system. Please wait..."; sleep 3
-    sudo chown "$USER":"$USER" "/usr/local/bin/fkol-k4.*"
-    sudo chown -R "$USER":"$USER" "/usr/share/icons/fkol-k4"
+    echo "2. Setting new file permissions. Please wait..."; sleep 3
+    sudo chown -R $USER:$USER $(ls -A $HOME/)
+    sudo chown -R $USER:$USER /usr/share/icons/fkol-k4
+    sudo chown $USER:$USER /usr/local/bin/fkol-k4.*
 }
 set_permissions
 
@@ -45,38 +44,7 @@ set_permissions
 #   Create links
 function create_links() {
     clear
-    echo "2. Creating needed symbolic links. Please wait..."; sleep 3
+    echo "3. Creating some needed symbolic links. Please wait..."; sleep 3
     ln -sf "/usr/share/icons/fkol-k4" "$HOME/.icons"
 }
 create_links
-
-
-#   Edit system files
-    clear
-    echo "3. Some system files need editing. Please wait..."; sleep 3
-function edit_system_files() {
-    sudo nano "/etc/cron.daily/custombackup"  # Backups
-    sudo nano "/etc/cron.hourly/fkol-k4.subvol_defrag"  # Btrfs defragment
-    echo '
-    
-    # fkol-k4 settings
-    GRUB_DISTRIBUTOR=`lsb_release -sd 2> /dev/null || echo Debian`
-    GRUB_CMDLINE_LINUX="ipv6.disable=1 elevator=cfq i915.enable_psr=0 "
-    GRUB_GFXMODE=auto
-    GRUB_GFXPAYLOAD_LINUX=keep
-    GRUB_BACKGROUND=/boot/grub/warty-final-ubuntu-vivid.tga
-    ' | sudo tee -a "/etc/default/grub"     # Grub configuration
-    sudo nano "/etc/default/grub"           # Grub configuration
-}
-edit_system_files
-
-
-#   Edit $USER files
-    clear
-    echo "4. Some user files need editing. Please wait..."; sleep 3
-function edit_user_files() {
-    nano /usr/local/bin/fkol-k4.grub_transfer
-    nano /usr/local/bin/fkol-k4.ubuntu-updates
-}
-edit_user_files
-
