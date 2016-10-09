@@ -1,0 +1,184 @@
+#!/bin/bash
+
+#   file: fkol-k4.10.essential
+#   type: Bash script
+#   Purpose: Installs essential packages
+
+#   Copyright (C) 2016  fkol k4, "fkolyvas at gmail dot com"
+
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+
+#   You should have received a copy of the GNU General Public License along
+#   with this program; if not, write to the Free Software Foundation, Inc.,
+#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+
+
+function headers_and_modules() {
+    # Install kernel (headers modules & dependencies)
+    message="01. Installing kernel headers modules & dependencies..."
+    clear; echo -e "$message"; sleep 3
+    sudo apt-get --yes install linux-headers-generic
+    sudo apt-get --yes --no-install-recommends build-dep linux-image-generic
+    sync
+}
+
+function deb_management() {
+    #   '.deb' management
+    message="02. Installing '.deb' management tools..."
+    clear; echo -e "$message"; sleep 3
+    array=(
+        app-install-data*
+        apt-file
+        aptitude
+        deborphan
+        gdebi
+        synaptic
+        )
+    sudo apt-get --yes install ${array[@]}; sync
+}
+
+function essential_utilities() {
+    # Kernel extras & essential utilities
+    message="03. Installing Kernel extras & essential utilities..."
+    clear; echo -e "$message"; sleep 3
+    array=(
+        build-essential
+        cpulimit
+        debootstrap
+        dialog
+        dkms
+        fakeroot
+        genisoimage
+        gksu
+        kernel-package
+        kernel-wedge
+        libncurses5
+        libncurses5-dev
+        locate
+        makedumpfile
+        pastebinit
+        preload
+        squashfs-tools
+        syslinux
+        tree
+        xterm
+        zenity
+        zram-config
+        )
+    sudo apt-get --yes --no-install-recommends install ${array[@]}; sync
+}
+
+function download_managers() {
+    # Download & sync managers
+    message="04. Installing Download & sync managers..."
+    clear; echo -e "$message"; sleep 3
+    array=(
+        axel
+        bzr
+        curl
+        deluge
+        git
+        git-cola
+        rsync
+        zsync
+        )
+    sudo apt-get --yes install ${array[@]}; sync
+}
+
+function codecs() {
+    # Media codecs & compression algorithms
+    message="05. Installing media codecs & compression algorithms..."
+    clear; echo -e "$message"; sleep 3
+        array=(
+        ubuntu-restricted-extras
+        default-java-plugin
+        lzma
+        lzd
+        lzip
+        lziprecover
+        lzop
+        liblz4-1
+        liblz4-tool
+        )
+    sudo apt-get --yes install ${array[@]}; sync
+}
+
+function editors() {
+    # Editors
+    message="06. Installing editors & IDE ..."
+    clear; echo -e "$message"; sleep 3
+    array=(
+        nano
+        vim
+        vim-python-jedi
+        medit
+        mousepad
+        pluma
+        bluefish
+        bluefish-plugins
+        geany
+        geany-plugins
+        idle
+        idle3
+        meld
+        poedit
+        potool
+        translate-toolkit
+        )
+    sudo apt-get --yes install ${array[@]}; sync
+    # Install Gedit plugins if we already have Gedit
+    [[ `which gedit` ]] && sudo apt-get --yes install gedit-plugins
+    sync
+}
+
+function info_n_recovery() {
+    # Sys_info, recovery etc.
+    message="07. Installing System_info, recovery tools etc..."
+    clear; echo -e "$message"; sleep 3
+    array=(
+        btrfs-tools
+        fancontrol
+        foremost
+        gddrescue
+        gparted
+        gsmartcontrol
+        hddtemp
+        htop
+        iotop
+        lm-sensors
+        lshw
+        lshw-gtk
+        lsof
+        lsscsi
+        mc
+        testdisk
+        )
+    sudo apt-get --yes install ${array[@]}; sync
+    # Enable sensors
+    sudo sensors-detect --auto
+    #yes | sudo sensors-detect # old command
+}
+
+function main() {
+    message="00. running 'fkol-k4.10.essential'..."
+    clear; echo -e "$message"; sleep 3
+    headers_and_modules
+    deb_management
+    essential_utilities
+    download_managers
+    codecs
+    editors
+    info_n_recovery
+    sync
+}
+
+main"$@"

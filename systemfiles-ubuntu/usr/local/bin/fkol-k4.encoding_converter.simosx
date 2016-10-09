@@ -1,0 +1,24 @@
+#!/bin/bash
+# Filename_________: encoding-converter
+# Filetype_________: Bash script
+# Author___________: fkol k4
+# Address__________: fkolyvas@gmail.com
+# Short description: transforms iso 8859-7 strings to utf 8
+# Frames___________: ┌──┐││└──┘
+
+bold=`tput bold`
+normal=`tput sgr0`
+
+while :
+do
+	echo -e
+	echo -e 
+	echo -e "\t ${bold}Enter a string to be converted, or press ctrl-c to exit: ${normal}"
+	read fkol_text
+	clear
+	echo -e "\t ${bold}This is what you entered...${normal}"
+	echo -e $fkol_text
+	echo -e
+	echo -e "\t ${bold}And this is how it is translated...${normal}"
+	echo -e $fkol_text | iconv -f utf-8 -t iso-8859-1 | iconv -f iso-8859-7 -t utf-8
+done

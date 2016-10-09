@@ -1,0 +1,79 @@
+#!/bin/bash
+
+#   file: fkol-k4.30.DE.xfce
+#   type: Bash script
+#   Purpose: Installs DE related packages
+
+#   Copyright (C) 2016  fkol k4, "fkolyvas at gmail dot com"
+
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+
+#   You should have received a copy of the GNU General Public License along
+#   with this program; if not, write to the Free Software Foundation, Inc.,
+#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+
+function xfce_additions() {
+    # XFCE4
+    message="1. additions for XFCE4..."
+    clear; echo -e "$message"; sleep 3
+    array=(
+        dconf-editor
+        dconf-tools
+        gconf-editor
+        dmz-cursor-theme
+        gnome-extra-icons
+        gnome-icon-theme-*
+        gtk2-engines
+        gtk2-engines-*
+        gtk3-engines-*
+        gtk-theme-config
+        menulibre 
+        plank
+        elementary-icon-theme
+        recordmydesktop
+        gtk-recordmydesktop
+        soundconverter
+        )
+    sudo apt-get --yes install ${array[@]}; sync
+}
+
+function chars_indicator() {
+    # UTF-8 characters indicator
+    message="2. Installing UTF-8 characters indicator..."
+    clear; echo -e "$message"; sleep 3
+    cd /opt/
+        if [[ -d /opt/indicator-chars ]]; then
+            sudo chown -R $USER:$USER /opt/indicator-chars/
+            cd /opt/indicator-chars/
+            git pull
+        else
+            sudo git clone git://github.com/tobyS/indicator-chars.git
+            sudo chown -R $USER:$USER /opt/indicator-chars/
+        fi
+        cd $HOME
+    #   Set to autostart
+    mkdir -p $USER/.config/autostart
+    src="$HOME/.local/share/applications/org.fkol-k4.chars-indicator.desktop"
+    dest="$HOME/.config/autostart/"
+    ln -sf "$src" "$dest"
+    sync
+}
+
+function main() {
+    message="00. running 'fkol-k4.30.DE.xfce'..."
+    clear; echo -e "$message"; sleep 3
+    xfce_additions
+    chars_indicator
+    sync
+}
+ main "$@"
+ 

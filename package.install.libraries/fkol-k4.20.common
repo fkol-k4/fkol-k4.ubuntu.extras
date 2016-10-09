@@ -1,0 +1,201 @@
+#!/bin/bash
+
+#   file: fkol-k4.20.common
+#   type: Bash script
+#   Purpose: Installs common packages
+
+#   Copyright (C) 2016  fkol k4, "fkolyvas at gmail dot com"
+
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+
+#   You should have received a copy of the GNU General Public License along
+#   with this program; if not, write to the Free Software Foundation, Inc.,
+#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+
+function markdown_editors() {
+    # Install markdown editors
+    message="1. Installing markdown editors..."
+    clear; echo -e "$message"; sleep 3
+    array=(
+        "$HOME/Downloads/Linux/Packages/Haroopad/v0.13.1/haroopad-v0.13.1-x64.deb"
+        "$HOME/Downloads/Linux/Packages/Remarkable/remarkable_1.87_all.deb"
+        )
+    sudo gdebi --non-interactive ${array[@]}; sync
+}
+
+function megasync_client() {
+    message="2. Installing MEGAsync client & plugins..."
+    clear; echo -e "$message"; sleep 3
+    # MEGA sync client
+    client="$HOME/Downloads/Linux/Packages/MEGAsync/16.04-amd/megasync_2.9.8-2.1_amd64.deb"
+    nautilus_plugin="$HOME/Downloads/Linux/Packages/MEGAsync/16.04-amd/nautilus-megasync_2.9.2_amd64.deb"
+    sudo gdebi --non-interactive "$client"; sync
+    #   install MEGA nautilus plugin if we already have nautilus
+    if [ `which nautilus` ]; then
+        sudo gdebi --non-interactive "$nautilus_plugin"; sync
+    fi
+    #   Set MEGA sync client to autostart
+    mkdir -p $HOME/.config/autostart
+    src="/usr/share/applications/megasync.desktop"
+    dest="$HOME/.config/autostart/"
+    ln -sf "$src" "$dest"
+    sync
+}
+
+function web_related() {
+    # Web related
+    message="3a. Installing web-related packages..."
+    clear; echo -e "$message"; sleep 3
+    array=(
+        firefox
+        thunderbird
+        links
+        lynx
+        irssi
+        pidgin
+        pidgin-extprefs
+        pidgin-plugin-pack
+        pidgin-themes
+        wireshark
+        )
+    sudo apt-get --yes install ${array[@]}; sync
+    message="3a. Adding extra repos for Google & Opera..."
+    clear; echo -e "$message"; sleep 3
+    # Google repositories
+    echo '# Home: http://dl.google.com/linux
+# GetKey: wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main #Google Chrome
+' | sudo tee /etc/apt/sources.list.d/google-chrome.list
+    echo '# Home: http://dl.google.com/linux
+# GetKey: wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+deb [arch=amd64] http://dl.google.com/linux/earth/deb/ stable main #Google Earth
+    ' | sudo tee /etc/apt/sources.list.d/google-earth.list
+    echo '# Home: http://dl.google.com/linux
+# GetKey: wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+deb http://dl.google.com/linux/talkplugin/deb/ stable main #GoogleTalk Plugin
+    ' | sudo tee /etc/apt/sources.list.d/google-talkplugin.list
+    # Add Google key
+    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - # Add Google key
+    # Opera browser repository
+    echo '# Home: http://deb.opera.com/
+# GetKey: wget -O - http://deb.opera.com/archive.key | sudo apt-key add -
+deb http://deb.opera.com/opera/ stable non-free #Opera Browser
+' | sudo tee /etc/apt/sources.list.d/opera.list
+    # Add Opera browser key
+    wget -O - http://deb.opera.com/archive.key | sudo apt-key add -
+    #   Update & upgrade
+    sudo apt-get --yes --quiet update
+    sudo apt-get --yes --quiet dist-upgrade; sync
+    #   Install extra packages
+    array=(
+        google-chrome-stable
+        google-talkplugin
+        )
+    sudo apt-get --yes install ${array[@]}; sync
+}
+
+function media() {
+    # Media tools
+    message="4. Installing media packages..."
+    clear; echo -e "$message"; sleep 3
+    array=(
+        blender
+        inkscape
+        shotwell
+        gimp
+        gimp-data-extras
+        gimp-gmic
+        gimp-lensfun
+        gimp-plugin-registry
+        gimp-texturize
+        audacity
+        mp3check
+        mp3diags
+        pulseaudio
+        pavucontrol
+        clementine
+        quodlibet
+        quodlibet-plugins
+        mpv
+        vlc
+        frei0r-plugins
+        mkvtoolnix
+        mkvtoolnix-gui
+        kdenlive
+        transcode
+        handbrake
+        )
+    sudo apt-get --yes install ${array[@]}; sync
+    # Install Rhythmbox plugins if we already have Rhythmbox
+    if [[ `which rhythmbox` ]]; then
+        sudo apt-get --yes install rhythmbox-plugins; sync
+    fi
+}
+
+function office() {
+    # Office
+    message="5. Installing office stuff..."
+    clear; echo -e "$message"; sleep 3
+    array=(
+        libreoffice
+        libreoffice-pdfimport
+        libreoffice-script-provider-bsh
+        libreoffice-script-provider-python
+        libreoffice-templates
+        seahorse
+        cups-pdf
+        hplip-gui
+        aspell
+        aspell-el
+        aspell-en
+        aspell-fr
+        myspell-el-gr
+        catfish
+        fonts-dejavu-extra
+        fonts-noto
+        fonts-freefont-*
+        fonts-gfs-*
+        fonts-liberation
+        fonts-linuxlibertine
+        fonts-mgopen
+        fonts-sil-gentium
+        ttf-adf-*
+        ttf-ubuntu-font-family
+        fontforge
+        fontforge-doc
+        fontforge-extras
+        font-manager
+        gucharmap
+        brasero*
+        )
+    sudo apt-get --yes install ${array[@]}; sync
+    #   Local windows fonts
+    src="$HOME/Public/Windows_Fonts_Collection"
+    dest="/usr/share/fonts/windows_fonts"
+    if [[ -d "$src" ]]; then
+        sudo cp -r "$src" "$dest"; sync
+        sudo fc-cache -fv
+    fi
+}
+
+function main() {
+    message="00. running 'fkol-k4.20.common'..."
+    clear; echo -e "$message"; sleep 3
+    markdown_editors
+    megasync_client
+    web_related
+    media
+    office
+    sync
+}
+
+main"$@"

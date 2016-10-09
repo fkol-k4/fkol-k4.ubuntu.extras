@@ -1,0 +1,183 @@
+#!/bin/bash
+
+#   file: 40_extra_additions
+#   type: Bash script
+#   Purpose: Installs essential packages
+
+#   Copyright (C) 2016  fkol k4, "fkolyvas at gmail dot com"
+
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+
+#   You should have received a copy of the GNU General Public License along
+#   with this program; if not, write to the Free Software Foundation, Inc.,
+#   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+function multisystem_usb() {
+    message='We are now going to install Multisystem USB creator...'
+    clear; echo "$message"; echo; sleep 3
+    #   multisystem
+    echo -e "# Home: http://liveusb.info/dotclear
+# GetKey: wget -q http://liveusb.info/multisystem/depot/multisystem.asc -O- | sudo apt-key add -
+deb http://liveusb.info/multisystem/depot all main #Multisystem
+" | sudo tee /etc/apt/sources.list.d/multisystem_usb.list
+    wget -q http://liveusb.info/multisystem/depot/multisystem.asc -O- | sudo apt-key add -
+    sudo apt-get --yes --quiet update
+    sudo apt-get --yes dist-upgrade
+    sudo apt-get --yes install multisystem
+}
+
+function boot_repair() {
+    message='We are now going to install Boot Repair...'
+    clear; echo "$message"; echo; sleep 3
+    #   boot-repair
+    echo -e "# Home: https://launchpad.net/~yannubuntu/+archive/boot-repair
+# GetKey: sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 60D8DA0B
+deb http://ppa.launchpad.net/yannubuntu/boot-repair/ubuntu $CODENAME main #Boot Repair
+deb-src http://ppa.launchpad.net/yannubuntu/boot-repair/ubuntu $CODENAME main #Boot Repair
+" | sudo tee /etc/apt/sources.list.d/boot-repair.list
+    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 60D8DA0B
+    sudo apt-get --yes --quiet update
+    sudo apt-get --yes dist-upgrade
+    sudo apt-get --yes install boot-repair
+}
+
+function oracle_virtualbox() {
+    message='We are now going to install Oracle VirtualBox...'
+    clear; echo "$message"; echo; sleep 3
+    #   virtualbox
+    version="xenial"
+    echo -e "# Home: https://www.virtualbox.org/wiki/Linux_Downloads
+# GetKey: wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | sudo apt-key add -
+deb http://download.virtualbox.org/virtualbox/debian $version contrib #Oracle VirtualBox
+" | sudo tee /etc/apt/sources.list.d/virtualbox-nonfree.list
+    wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | sudo apt-key add -
+    #   install virtualbox
+    sudo apt-get --quiet update
+    sudo apt-get --yes dist-upgrade
+    sudo apt-get --yes install virtualbox-5.1
+    sudo gpasswd -a "$USER" vboxusers                                                 # add $USER to group
+    firefox -private -new-window "https://www.virtualbox.org/wiki/Downloads "       # install extensions pack
+    #   old way
+    function old_extension_way() {
+        extensions_file="http://download.virtualbox.org/virtualbox/5.1.6/Oracle_VM_VirtualBox_Extension_Pack-5.1.6-110634.vbox-extpack"
+        mkdir -p $HOME/.local/src/virtualbox
+        cd $HOME/.local/src/virtualbox/
+            wget $extensions_file
+            /usr/bin/virtualbox Oracle_*.vbox-extpack
+        cd $HOME
+    }
+}
+
+function coreutils_viewer() {
+    message='We are now going to compile CoreUtils Viewer...'
+    clear; echo "$message"; echo; sleep 3
+    # linux tool to show progress for cp, rm, dd, ...
+    package_repo="https://github.com/Xfennec/cv"
+    function compile_cv() {
+        # compile coreutils viewer
+        make clean
+        make
+        sudo make install
+        make clean
+    }
+    # install
+    mkdir -p "$HOME/.local/src"
+    cd "$HOME/.local/src/"
+    if [[ -d "$HOME/.local/src/cv" ]]; then
+        cd cv/
+        git pull
+    else
+        git clone "$package_repo"
+        cd cv/
+    fi
+    compile_cv
+    sync; cd $HOME
+}
+
+function live_streamer() {
+    message='We are now going to compile LiveStreamer...'
+    clear; echo "$message"; echo; sleep 3
+    # livestreamer: http://livestreamer.tanuki.se/en/latest/
+    dependencies=(
+        python
+        python-setuptools
+        python-requests
+        )
+    sudo apt-get --yes install ${dependencies[@]}; sync
+    # 	compile livestreamer
+    mkdir -p "$HOME/.local/src"
+    cd "$HOME/.local/src/"
+    if [[ -d "$HOME/.local/src/livestreamer" ]]; then
+        cd livestreamer/
+        git pull
+    else
+        git clone "git://github.com/chrippa/livestreamer.git"
+        cd livestreamer/
+    fi
+    sudo python setup.py install
+    sync; cd $HOME
+}
+
+function choose_package() {
+    # Choose extra packages
+    echo "You can choose the package you want to install from the list below"
+    echo "by entering the number next to it, or type anything else to exit."
+    echo
+    echo "1. Multisystem USB creator"
+    echo "2. Boot Repair"
+    echo "3. Oracle VirtualBox"
+    echo "4. CoreUtils Viewer (cv)"
+    echo "5. LiveStreamer"
+    echo "0. Exit (default)"
+    echo
+    read -p "Enter your choice: " extra_package
+    # Execute action
+    if [[ "$extra_package" == "1" ]]; then
+        multisystem_usb
+    elif [[ "$extra_package" == "2" ]]; then
+        boot_repair
+    elif [[ "$extra_package" == "3" ]]; then
+        oracle_virtualbox
+    elif [[ "$extra_package" == "4" ]]; then
+        coreutils_viewer
+    elif [[ "$extra_package" == "5" ]]; then
+        live_streamer
+    else
+        echo; echo "Ok, exiting..."; echo; sleep 2
+        return # exits function
+        # this is for exiting the entire script
+        # kill -INT $$
+    fi
+    choose_again
+}
+
+function choose_again() {
+    # Choose again after 
+    clear
+    message='Do you want to install anything else? (Y/n): '
+    echo
+    read -p "$message" answer
+    if [[ "$answer" == "Y" ]] || [[ "$answer" == "y" ]]; then
+        echo "Ok, continuing..."; sleep 3
+        clear
+        choose_package
+    else
+        echo; echo "Ok, exiting..."; echo; sleep 2
+    fi
+}
+
+function main() {
+    clear
+    echo "We can install some extra packages."; echo
+    choose_package
+}
+
+main "$@"
