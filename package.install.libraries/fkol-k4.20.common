@@ -187,6 +187,13 @@ function office() {
     fi
 }
 
+function keepassx_2() {
+    # Install keepassx
+    message='4. Installing KeepassX2...'
+    clear; echo -e "$message"; sleep 3
+    sudo apt-get --yes install keepassx; sync
+}
+
 function main() {
     message="00. running 'fkol-k4.20.common'..."
     clear; echo -e "$message"; sleep 3
@@ -195,6 +202,7 @@ function main() {
     web_related
     media
     office
+    keepassx_2
     sync
 }
 
