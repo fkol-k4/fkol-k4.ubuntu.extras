@@ -55,10 +55,11 @@ function oracle_virtualbox() {
     #   virtualbox
     version="xenial"
     echo -e "# Home: https://www.virtualbox.org/wiki/Linux_Downloads
-# GetKey: wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | sudo apt-key add -
+# GetKey: wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
 deb http://download.virtualbox.org/virtualbox/debian $version contrib #Oracle VirtualBox
 " | sudo tee /etc/apt/sources.list.d/virtualbox-nonfree.list
-    wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | sudo apt-key add -
+    wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
+    wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
     #   install virtualbox
     sudo apt-get --quiet update
     sudo apt-get --yes dist-upgrade
