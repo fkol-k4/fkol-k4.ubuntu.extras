@@ -109,5 +109,5 @@ function main() {
     unity_settings
     sync
 }
+
  main "$@"
- 

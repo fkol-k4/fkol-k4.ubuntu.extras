@@ -26,6 +26,8 @@ function headers_and_modules() {
     # Install kernel (headers modules & dependencies)
     message="01. Installing kernel headers modules & dependencies..."
     clear; echo -e "$message"; sleep 3
+    sudo apt-get --quiet update
+    echo; echo
     sudo apt-get --yes install linux-headers-generic
     sudo apt-get --yes --no-install-recommends build-dep linux-image-generic
     sync

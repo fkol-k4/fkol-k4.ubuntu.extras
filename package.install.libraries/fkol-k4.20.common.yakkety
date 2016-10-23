@@ -26,10 +26,13 @@ function markdown_editors() {
     message="1. Installing markdown editors..."
     clear; echo -e "$message"; sleep 3
     array=(
-        "$HOME/Downloads/Linux/Packages/Haroopad/v0.13.1/haroopad-v0.13.1-x64.deb"
-        "$HOME/Downloads/Linux/Packages/Remarkable/remarkable_1.87_all.deb"
+        "$HOME/Downloads/Haroopad/v0.13.1/haroopad-v0.13.1-x64.deb"
+        "$HOME/Downloads/Packages/Remarkable/remarkable_1.87_all.deb"
         )
-    sudo gdebi --non-interactive ${array[@]}; sync
+    for package in ${array[@]}; do
+        [[ -f $package ]] && sudo gdebi --non-interactive $package
+        sync
+    done
 }
 
 function megasync_client() {
@@ -43,7 +46,7 @@ deb http://mega.nz/linux/MEGAsync/xUbuntu_`lsb_release -sr`/ ./ #MEGA sync
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4B4E7A9523ACD201
     #   Update & upgrade
     sudo apt-get --yes --quiet update
-    sudo apt-get --yes --quiet dist-upgrade; sync
+    sudo apt-get --yes dist-upgrade; sync
     # MEGA sync client
     sudo apt-get --yes install megasync; sync
     #   install MEGA nautilus plugin if we already have nautilus
@@ -73,19 +76,20 @@ function web_related() {
     clear; echo -e "$message"; sleep 3
     # Google repositories
     echo '# Home: http://dl.google.com/linux
-# GetKey: wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+# GetKey: wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main #Google Chrome
 ' | sudo tee /etc/apt/sources.list.d/google-chrome.list
     echo '# Home: http://dl.google.com/linux
-# GetKey: wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+# GetKey: wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 deb [arch=amd64] http://dl.google.com/linux/earth/deb/ stable main #Google Earth
     ' | sudo tee /etc/apt/sources.list.d/google-earth.list
     echo '# Home: http://dl.google.com/linux
-# GetKey: wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+# GetKey: wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 deb http://dl.google.com/linux/talkplugin/deb/ stable main #GoogleTalk Plugin
     ' | sudo tee /etc/apt/sources.list.d/google-talkplugin.list
     # Add Google key
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - # Add Google key
+    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - # old way
+    wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -     # new way
     # Opera browser repository
     echo '# Home: http://deb.opera.com/
 # GetKey: wget -O - http://deb.opera.com/archive.key | sudo apt-key add -
@@ -95,7 +99,7 @@ deb http://deb.opera.com/opera/ stable non-free #Opera Browser
     wget -O - http://deb.opera.com/archive.key | sudo apt-key add -
     #   Update & upgrade
     sudo apt-get --yes --quiet update
-    sudo apt-get --yes --quiet dist-upgrade; sync
+    sudo apt-get --yes dist-upgrade; sync
     #   Install extra packages
     array=(
         google-chrome-stable
@@ -180,10 +184,11 @@ function office() {
     sudo apt-get --yes install ${array[@]}; sync
     #   Local windows fonts
     src="$HOME/Public/Windows_Fonts_Collection"
-    dest="/usr/share/fonts/windows_fonts"
-    if [[ -d "$src" ]]; then
-        sudo cp -r "$src" "$dest"; sync
+    dst="/usr/share/fonts/windows_fonts"
+    if [[ -d "$src" ]] && ! [[ -d "$dst" ]]; then
+        sudo cp -r "$src" "$dst"; sync
         sudo fc-cache -fv
+        sync
     fi
 }
 

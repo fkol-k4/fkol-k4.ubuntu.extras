@@ -4,4 +4,14 @@ Debian Red              :   D70A53
 Fedora Blue             :   3C6EB4
 Ubuntu Orange           :   E95420
 Ubuntu Bright Orange    :   FF4012
+Ubuntu MATE green       :   87A556
+
+Terminal color codes
+
+1. Ubuntu
+Text        :   EDEDED
+Background  :   181818
+Palette     :   FF4012  8B0000  5E8B2E  C4B800  3C6EB4  5E2750  06989A
+                E95420  D70A53  7CFC00  F0F066  1793D1  772953  7FFFD4
+
 
