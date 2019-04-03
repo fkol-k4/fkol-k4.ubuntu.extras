@@ -143,3 +143,9 @@ function fkol_DE_reset() {
     rm -rf $HOME/.cinnamon
 }
 
+function fkol_network_restart() {
+    # resatrt network systems
+    sudo ip addr flush wlp1s0
+    sudo systemctl restart networking.service
+}
+
