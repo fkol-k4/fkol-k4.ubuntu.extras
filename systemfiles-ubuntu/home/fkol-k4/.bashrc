@@ -149,3 +149,13 @@ function fkol_network_restart() {
     sudo systemctl restart networking.service
 }
 
+
+function fkol_disable_NetworkManager_wait_online_service() {
+    # disable service
+    sudo systemctl disable NetworkManager-wait-online.service
+}
+
+function fkol_disable_SnapPackages() {
+    # Disable service
+    sudo systemctl disable snapd.service
+}
