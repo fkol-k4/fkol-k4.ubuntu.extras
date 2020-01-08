@@ -159,3 +159,13 @@ function fkol_disable_SnapPackages() {
     # Disable service
     sudo systemctl disable snapd.service
 }
+
+function fkol_disable_TouchPad() {
+    # Disable Touchpad
+    synclient TouchpadOff=1
+}
+
+function fkol_enable_TouchPad() {
+    # Enable Touchpad
+    synclient TouchpadOff=0
+}
