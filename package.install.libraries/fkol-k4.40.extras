@@ -2,7 +2,7 @@
 
 #   file: 40_extra_additions
 #   type: Bash script
-#   Purpose: Installs essential packages
+#   Purpose: Installs extra packages
 
 #   Copyright (C) 2016  fkol k4, "fkolyvas at gmail dot com"
 
@@ -19,35 +19,6 @@
 #   You should have received a copy of the GNU General Public License along
 #   with this program; if not, write to the Free Software Foundation, Inc.,
 #   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-
-function multisystem_usb() {
-    message='We are now going to install Multisystem USB creator...'
-    clear; echo "$message"; echo; sleep 3
-    #   multisystem
-    echo -e "# Home: http://liveusb.info/dotclear
-# GetKey: wget -q http://liveusb.info/multisystem/depot/multisystem.asc -O- | sudo apt-key add -
-deb http://liveusb.info/multisystem/depot all main #Multisystem
-" | sudo tee /etc/apt/sources.list.d/multisystem_usb.list
-    wget -q http://liveusb.info/multisystem/depot/multisystem.asc -O- | sudo apt-key add -
-    sudo apt-get --yes --quiet update
-    sudo apt-get --yes dist-upgrade
-    sudo apt-get --yes install multisystem
-}
-
-function boot_repair() {
-    message='We are now going to install Boot Repair...'
-    clear; echo "$message"; echo; sleep 3
-    #   boot-repair
-    echo -e "# Home: https://launchpad.net/~yannubuntu/+archive/boot-repair
-# GetKey: sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 60D8DA0B
-deb http://ppa.launchpad.net/yannubuntu/boot-repair/ubuntu $CODENAME main #Boot Repair
-deb-src http://ppa.launchpad.net/yannubuntu/boot-repair/ubuntu $CODENAME main #Boot Repair
-" | sudo tee /etc/apt/sources.list.d/boot-repair.list
-    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 60D8DA0B
-    sudo apt-get --yes --quiet update
-    sudo apt-get --yes dist-upgrade
-    sudo apt-get --yes install boot-repair
-}
 
 function oracle_virtualbox() {
     message='We are now going to install Oracle VirtualBox...'

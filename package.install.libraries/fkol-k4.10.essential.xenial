@@ -28,8 +28,8 @@ function headers_and_modules() {
     clear; echo -e "$message"; sleep 3
     sudo apt-get --quiet update
     echo; echo
-    sudo apt-get --yes install linux-headers-generic
-    sudo apt-get --yes --no-install-recommends build-dep linux-image-generic
+    sudo apt-get --yes install linux-generic-hwe-16.04 linux-headers-generic linux-headers-generic-hwe-16.04
+    sudo apt-get --yes --no-install-recommends build-dep linux-generic-hwe-16.04
     sync
 }
 
@@ -60,7 +60,6 @@ function essential_utilities() {
         dkms
         fakeroot
         genisoimage
-        gksu
         kernel-package
         kernel-wedge
         libncurses5

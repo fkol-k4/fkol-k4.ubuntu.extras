@@ -96,9 +96,6 @@ function unity_settings() {
     #  gsettings as user
     gsettings set org.gnome.nautilus.preferences always-use-location-entry true
     gsettings set org.gtk.Settings.FileChooser sort-directories-first true
-    #  gsettings as root
-    sudo su root -c 'gsettings set org.gnome.nautilus.preferences always-use-location-entry true'
-    sudo su root -c 'gsettings set org.gtk.Settings.FileChooser sort-directories-first true'
 }
 
 function main() {

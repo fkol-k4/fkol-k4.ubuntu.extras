@@ -33,26 +33,14 @@ function markdown_editors() {
         [[ -f $package ]] && sudo gdebi --non-interactive $package
         sync
     done
-}
-
-function megasync_client() {
-    message="2. Installing MEGAsync client & plugins..."
-    clear; echo -e "$message"; sleep 3
-    # MEGA sync repository
-    echo -e "# Home: https://mega.nz/#sync
-# GetKey: sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4B4E7A9523ACD201
-deb http://mega.nz/linux/MEGAsync/xUbuntu_`lsb_release -sr`/ ./ #MEGA sync
-" | sudo tee /etc/apt/sources.list.d/megasync.list
-    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4B4E7A9523ACD201
-    #   Update & upgrade
-    sudo apt-get --yes --quiet update
-    sudo apt-get --yes --quiet dist-upgrade; sync
-    # MEGA sync client
-    sudo apt-get --yes install megasync; sync
-    #   install MEGA nautilus plugin if we already have nautilus
-    if [[ `which nautilus` ]]; then
-        sudo apt-get --yes install nautilus-megasync; sync
-    fi
+    function install_haroopad_from_web() {
+		# Install Haroopad from web if not installed
+		cd /tmp/
+		wget "https://bitbucket.org/rhiokim/haroopad-download/downloads/haroopad-v0.13.1-x64.deb"
+		sudo gdebi --non-interactive haroopad-v0.13.1-x64.deb
+		cd $HOME
+	}
+    [[ ! -f `which haroopad` ]] &&  install_haroopad_from_web
 }
 
 function web_related() {
@@ -90,13 +78,6 @@ deb http://dl.google.com/linux/talkplugin/deb/ stable main #GoogleTalk Plugin
     # Add Google key
     wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - # old way
     wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -     # new way
-    # Opera browser repository
-    echo '# Home: http://deb.opera.com/
-# GetKey: wget -O - http://deb.opera.com/archive.key | sudo apt-key add -
-deb http://deb.opera.com/opera/ stable non-free #Opera Browser
-' | sudo tee /etc/apt/sources.list.d/opera.list
-    # Add Opera browser key
-    wget -O - http://deb.opera.com/archive.key | sudo apt-key add -
     #   Update & upgrade
     sudo apt-get --yes --quiet update
     sudo apt-get --yes dist-upgrade
@@ -195,23 +176,23 @@ function office() {
     fi
 }
 
-function keepassx_2() {
+function keepassx_package() {
     # Install keepassx
     message='4. Installing KeepassX2...'
     clear; echo -e "$message"; sleep 3
-    sudo apt-get --yes install keepassx; sync
+    sudo apt-get --yes install keepassx ; sync
 }
 
 function main() {
     message="00. running 'fkol-k4.20.common'..."
     clear; echo -e "$message"; sleep 3
     markdown_editors
-    megasync_client
     web_related
     media
     office
-    keepassx_2
+    keepassx_package
     sync
 }
 
 main"$@"
+sync
